@@ -1,58 +1,133 @@
 <template>
-  <view>
-    <view class="vue-box">{{ user.teststr }}</view>
-    <u-button type="primary" @click="test" :color="$u.color.primary">
-      测试
-    </u-button>
-    <u-button @click="setStore">修改</u-button>
-    <!-- 图片组件 -->
-    <u-image :showLoading="true" :src="demoImg" width="80px" height="80px">
-    </u-image>
-    <!-- 文本组件 -->
-    <u-text type="primary" text="主色"></u-text>
-    <u-text type="error" text="错误"></u-text>
-    <u-text type="success" text="成功"></u-text>
-    <u-text type="warning" text="警告"></u-text>
-    <u-text type="info" text="信息"></u-text>
-    <u-badge type="warning" max="9" value="5"></u-badge>
-    <u-tag text="标签"></u-tag>
-    <u-tag text="标签" type="warning"></u-tag>
-    <u-tag text="标签" type="success"></u-tag>
-    <u-tag text="标签" type="error"></u-tag>
-    <u-loading-icon text="加载中" textSize="18"></u-loading-icon>
-    <u-rate count="5" v-model="info.rate"></u-rate>
-    <u-search placeholder="日照香炉生紫烟" v-model="info.keyword"></u-search>
-    <u-slider v-model="info.slider"></u-slider>
-  </view>
+  <layout class="home">
+    <view class="navbar">
+      <Navbar :bgColor="'#a6ffcb'">
+        <template #left>
+          <view>
+            <u-image :show-loading="true"
+              src="https://s.cn.bing.net/th?id=OJ.7biM5vCN4l0IUw&qlt=80&o=6&dpr=1.3&pid=SANGAM" width="60"
+              height="44px"></u-image>
+          </view>
+        </template>
+        <template #right>
+          <u-icon name="scan" size="30" color="#000" @click="takephoto"></u-icon>
+        </template>
+      </Navbar>
+    </view>
+    <view class="banner">
+      <banner></banner>
+    </view>
+    <view class="btn-group">
+      <view class="btn-item" @click="routeto()">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+      <view class="btn-item">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+      <view class="btn-item">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+      <view class="btn-item">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+      <view class="btn-item">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+      <view class="btn-item">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+      <view class="btn-item">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+      <view class="btn-item">
+        <u-image src="../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
+        <text class="btn-text">123</text>
+      </view>
+    </view>
+  </layout>
 </template>
 
 <script setup lang="ts">
-import useUserStore from "@/store/user";
-import demoImg from "@/static/green.jpeg"
-import { reactive } from "vue";
+import useUserStore from "@/store/user"
+import usePlatform from '@/store/platform'
+import { reactive, ref, onMounted } from "vue"
+import layout from "@/components/layout/index.vue"
+import Navbar from "@/components/layout/navbar/navbar.vue"
+import banner from "@/components/banner/banner.vue"
+const user = useUserStore()
+let src = ref()
+let barcode = ref()
+const app = usePlatform()
+let platform = app.getPlatform
+onMounted(() => {
+  console.log(platform);
+  if (platform == 'h5') {
 
-const user = useUserStore();
+  } else if (platform == 'weixin') {
 
-const info = reactive({
-  rate: 0,
-  keyword: "",
-  slider: 0
+  }
 })
+function takephoto() {
+  uni.scanCode({
+    onlyFromCamera: true,
+    success: function (res) {
+      console.log('条码类型：' + res.scanType);
+      console.log('条码内容：' + res.result);
+    }
+  });
+  // uni.chooseVideo({
+  //   sourceType: ['camera'],
+  //   success: function (res: any) {
+  //     src = res.tempFilePath;
+  //   }
+  // })
+}
+function routeto() {
 
-const test = function () {
-  console.log("pinia中的数据:", user.teststr);
-  // if (user.teststr) {
-};
-
-const setStore = function () {
-  const randomnum = Math.random() * 100 + ""
-  user.setStr(randomnum);
-};
+}
 </script>
 
 <style lang="scss" scoped>
-.vue-box {
-  text-align: center;
-  margin: 10px 0;
+.home {
+  display: flex;
+  flex-direction: column;
+
+  .navbar {
+    height: 88rpx;
+  }
+
+  .banner {
+    height: 260rpx;
+  }
+
+  .btn-group {
+    display: grid;
+    height: 250rpx;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+
+    .btn-item {
+      background-color: aqua;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+
+      .btn-text {
+        width: 100%;
+        text-align: center;
+      }
+
+      :deep(.u-image) {
+        margin: 0 auto;
+      }
+    }
+  }
 }
 </style>

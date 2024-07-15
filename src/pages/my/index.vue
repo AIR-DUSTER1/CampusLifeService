@@ -1,5 +1,5 @@
 <template>
-  <view class="my-main">
+  <layout class="my-main">
     <u-swiper :list="my.swiper"></u-swiper>
     <u-subsection :list="my.list" :current="1"></u-subsection>
     <u-collapse>
@@ -14,12 +14,12 @@
       </u-collapse-item>
     </u-collapse>
     <u-notice-bar :text="my.text1" mode="closable"></u-notice-bar>
-  </view>
+  </layout>
 </template>
 
 <script setup lang='ts'>
 import { reactive } from 'vue'
-
+import layout from "@/components/layout/index.vue"
 const my = reactive({
   swiper: [
     "https://img-nos.yiyouliao.com/alph/3b55656496704aca3769a1b88fea784b.jpeg",

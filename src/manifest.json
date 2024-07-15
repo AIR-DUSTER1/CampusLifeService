@@ -1,5 +1,5 @@
 {
-    "name" : "UniVue3",
+    "name" : "飞鸟校园生活服务平台",
     "appid" : "__UNI__B8B6730",
     "description" : "一个测试软件",
     "versionName" : "1.0.0",
@@ -20,7 +20,11 @@
             "delay" : 0
         },
         /* 模块配置 */
-        "modules" : {},
+        "modules" : {
+            "Barcode" : {},
+            "Camera" : {},
+            "OAuth" : {}
+        },
         /* 应用发布信息 */
         "distribute" : {
             /* android打包配置 */
@@ -50,7 +54,10 @@
             },
             /* SDK配置 */
             "sdkConfigs" : {
-                "ad" : {}
+                "ad" : {},
+                "oauth" : {
+                    "univerify" : {}
+                }
             }
         }
     },
@@ -58,7 +65,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "wxd3d0352649909011",
+        "appid" : "wx6026feb3420d32ba",
         "setting" : {
             "urlCheck" : false
         },

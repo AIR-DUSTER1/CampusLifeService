@@ -137,11 +137,11 @@ enum RouteType {
 interface URouteObject {
     (option: {
         type?:
-            | RouteType.navigateBack
-            | RouteType.reLaunch
-            | RouteType.switchTab
-            | RouteType.redirect
-            | RouteType.navigateTo
+        | RouteType.navigateBack
+        | RouteType.reLaunch
+        | RouteType.switchTab
+        | RouteType.redirect
+        | RouteType.navigateTo
         url?: string
         delta?: number
         params?: object
@@ -180,6 +180,7 @@ interface UTest {
 }
 
 export interface $u {
+    platform: string
     test: UTest
     color: UColor
     route: URoute

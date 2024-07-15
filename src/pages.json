@@ -3,12 +3,28 @@
         {
             "path": "pages/home/index",
             "style": {
+                "navigationStyle": "custom",
                 "navigationBarTitleText": "首页"
+            }
+        },
+        {
+            "path": "pages/cards/index",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "校园卡"
+            }
+        },
+        {
+            "path": "pages/messages/index",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "消息"
             }
         },
         {
             "path": "pages/my/index",
             "style": {
+                "navigationStyle": "custom",
                 "navigationBarTitleText": "我的"
             }
         }
@@ -20,16 +36,16 @@
         "backgroundColor": "#ffffff",
         "list": [
             {
-                "pagePath": "pages/home/index",
-                "iconPath": "static/images/home-2-line.png",
-                "selectedIconPath": "static/images/home-2-fill.png",
-                "text": "首页"
+                "pagePath": "pages/home/index"
             },
             {
-                "pagePath": "pages/my/index",
-                "iconPath": "static/images/user-line.png",
-                "selectedIconPath": "static/images/user-fill.png",
-                "text": "我的"
+                "pagePath": "pages/cards/index"
+            },
+            {
+                "pagePath": "pages/messages/index"
+            },
+            {
+                "pagePath": "pages/my/index"
             }
         ]
     },
@@ -40,6 +56,7 @@
         "backgroundColor": "#F8F8F8"
     },
     "easycom": {
+        "autoscan": true,
         "custom": {
             "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue"
         }
