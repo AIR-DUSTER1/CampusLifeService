@@ -1,28 +1,35 @@
 {
     "pages": [
         {
-            "path": "pages/home/index",
+            "path": "pages/login/login",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "登录"
+            }
+        },
+        {
+            "path": "pages/tabbar/home/index",
             "style": {
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "首页"
             }
         },
         {
-            "path": "pages/cards/index",
+            "path": "pages/tabbar/cards/index",
             "style": {
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "校园卡"
             }
         },
         {
-            "path": "pages/messages/index",
+            "path": "pages/tabbar/messages/index",
             "style": {
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "消息"
             }
         },
         {
-            "path": "pages/my/index",
+            "path": "pages/tabbar/my/index",
             "style": {
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "我的"
@@ -36,16 +43,16 @@
         "backgroundColor": "#ffffff",
         "list": [
             {
-                "pagePath": "pages/home/index"
+                "pagePath": "pages/tabbar/home/index"
             },
             {
-                "pagePath": "pages/cards/index"
+                "pagePath": "pages/tabbar/cards/index"
             },
             {
-                "pagePath": "pages/messages/index"
+                "pagePath": "pages/tabbar/messages/index"
             },
             {
-                "pagePath": "pages/my/index"
+                "pagePath": "pages/tabbar/my/index"
             }
         ]
     },

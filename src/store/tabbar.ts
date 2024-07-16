@@ -3,14 +3,14 @@ import { defineStore } from 'pinia'
 const usetabbar = defineStore('tabbar', {
     state() {
         return {
-            active: 0,
+            active: "home",
         }
     },
     getters: {
         getActive: (state) => state.active,
     },
     actions: {
-        setActive(active: number) {
+        setActive(active: string) {
             this.active = active
         },
     },

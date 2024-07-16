@@ -1,7 +1,7 @@
 <template>
-    <u-tabbar :value="active" :fixed="true" :placeholder="false" :safeAreaInsetBottom="true" class="tabbar">
-        <u-tabbar-item :text="item.text" :icon="item.icon" @click="click(item)" v-for="item in list"
-            :dot="item.badge != 0 ? true : false" :key="item.id"></u-tabbar-item>
+    <u-tabbar :value="active" :fixed="true" :placeholder="true" :safeAreaInsetBottom="true" class="tabbar">
+        <u-tabbar-item :text="item.text" :icon="fillicon(item)" @click="click(item)" v-for="item in list"
+            :dot="item.badge != 0 ? true : false" :key="item.id" :name="item.name"></u-tabbar-item>
     </u-tabbar>
 </template>
 
@@ -9,51 +9,64 @@
 import { ref, reactive, onMounted } from 'vue'
 import usetabbar from "@/store/tabbar"
 let badge = ref(1000)
-let active = usetabbar().getActive
+let active = ref('')
 const tabbar = usetabbar()
-const route = uni.$u.route
 let list = reactive([
     {
         id: 0,
         text: '首页',
         icon: 'home',
-        pagePath: "/pages/home/index",
+        name: "home",
+        selectedIconPath: "home-fill",
+        pagePath: "/pages/tabbar/home/index",
         badge: 0
     },
     {
         id: 1,
         text: '校园卡',
-        icon: 'rmb-circle',
-        pagePath: "/pages/cards/index",
+        icon: '/static/images/tabBar/card.png',
+        selectedIconPath: "/static/images/tabBar/card-fill.png",
+        name: "rmb-circle",
+        pagePath: "/pages/tabbar/cards/index",
         badge: 0
     },
     {
         id: 2,
         text: '消息',
         icon: 'bell',
-        pagePath: "/pages/messages/index",
+        name: "bell",
+        selectedIconPath: "bell-fill",
+        pagePath: "/pages/tabbar/messages/index",
         badge: badge.value
     },
     {
         id: 3,
         text: '我的',
         icon: 'account',
-        pagePath: "/pages/my/index",
+        name: "account",
+        selectedIconPath: "account-fill",
+        pagePath: "/pages/tabbar/my/index",
         badge: 0
     }
 ])
 onMounted(() => {
-    tabbar.setActive(active)
+    active.value = usetabbar().getActive
 })
 function click(item) {
-    console.log(item.id);
-    active = item.id
-    uni.switchTab({
-        url: item.pagePath,
-        success() {
-            tabbar.setActive(active)
-        }
-    })
+    let name = usetabbar().getActive
+    if (item.name != name) {
+        tabbar.setActive(item.name)
+        active.value = name
+        console.log(active.value);
+        uni.switchTab({
+            url: item.pagePath,
+            success() {
+            }
+        })
+    }
+}
+function fillicon(item) {
+    return usetabbar().getActive === item.name ? item.selectedIconPath : item.icon
 }
 </script>
 
