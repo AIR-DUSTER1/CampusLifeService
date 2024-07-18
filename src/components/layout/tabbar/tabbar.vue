@@ -6,8 +6,8 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted } from 'vue'
 import usetabbar from "@/store/tabbar"
+import { ref, reactive, onMounted } from 'vue'
 let badge = ref(1000)
 let active = ref('')
 const tabbar = usetabbar()

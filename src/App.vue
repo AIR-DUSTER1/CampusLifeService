@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onLaunch, onShow, onHide } from "@dcloudio/uni-app"
 import usePlatform from '@/store/platform'
-let platform = uni.$u.platform
 const app = usePlatform()
+let platform = uni.$u.platform
 onLaunch(() => {
   app.setPlatform(platform)
   console.log("App Launch");

@@ -45,13 +45,11 @@
 </template>
 
 <script setup lang="ts">
-import useUserStore from "@/store/user"
 import usePlatform from '@/store/platform'
 import { reactive, ref, onMounted } from "vue"
 import layout from "@/components/layout/index.vue"
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import banner from "@/components/banner/banner.vue"
-const user = useUserStore()
 let src = ref()
 let scan = ref("0")
 const app = usePlatform()
@@ -113,6 +111,7 @@ let list = reactive([
 ]
 )
 onMounted(() => {
+
   if (platform == 'h5') {
 
   } else if (platform == 'weixin' || platform == 'mp') {
