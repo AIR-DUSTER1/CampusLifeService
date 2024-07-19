@@ -1,14 +1,15 @@
 {
     "pages": [
+
         {
-            "path": "pages/login/LoginForm",
+            "path": "pages/login/login",
             "style": {
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "登录"
             }
         },
         {
-            "path": "pages/login/login",
+            "path": "pages/login/LoginForm",
             "style": {
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "登录"
