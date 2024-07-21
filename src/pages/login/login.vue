@@ -1,6 +1,6 @@
 <template>
     <view>
-        <u-button type="suecss" @click="tologin" style="margin: auto auto;">登录</u-button>
+        <u-button type="suecss" @click="tologin()" style="margin: auto auto;">登录</u-button>
         <u-toast ref="uToastRef"></u-toast>
     </view>
 </template>
@@ -8,11 +8,22 @@
 <script setup lang='ts'>
 import { ref, reactive, onMounted } from 'vue'
 import judgeLoginStatus from '@/utils/LoginStatus'
+import usePlatform from '@/store/platform'
+import request from '@/utils/request'
 declare const plus: any
 const uToastRef = ref()
 let weiboOauth = ref()
+var qqOauth = ref()
+const app = usePlatform()
+let platform = app.getPlatform
 onMounted(() => {
-    tologin()
+    if (platform == 'plus' || platform == 'nvue') {
+        tologin()
+    } else if (platform == 'weixin' || platform == 'mp' || platform == 'h5') {
+        uni.reLaunch({
+            url: '/pages/login/LoginForm'
+        })
+    }
     uni.getProvider({
         service: 'oauth',
         success: function (res) {
@@ -54,10 +65,10 @@ function tologin() {
             },
             "otherLoginButton": {
                 "visible": true, // 是否显示其他登录按钮，默认值：true
-                "normalColor": "", // 其他登录按钮正常状态背景颜色 默认值：透明
-                "highlightColor": "", // 其他登录按钮按下状态背景颜色 默认值：透明
+                "normalColor": "#F3F4F6", // 其他登录按钮正常状态背景颜色 默认值：透明
+                "highlightColor": "#D5D6D8", // 其他登录按钮按下状态背景颜色 默认值：透明
                 "textColor": "#656565", // 其他登录按钮文字颜色 默认值：#656565
-                "title": "其他手机号", // 其他登录方式按钮文字 默认值：“其他登录方式”
+                "title": "使用其他手机号或邮箱登录", // 其他登录方式按钮文字 默认值：“其他登录方式”
                 "borderColor": "",  //边框颜色 默认值：透明（仅iOS支持）
                 "borderRadius": "24px" // 其他登录按钮圆角 默认值："24px" （按钮高度的一半）
             },
@@ -86,18 +97,14 @@ function tologin() {
                         "iconPath": "/static/images/weibo.png" // 图标路径仅支持本地图片
                     },
                     {
-                        "provider": "weixin",
-                        "iconPath": "/static/images/weixin.png" // 图标路径仅支持本地图片
+                        "provider": "qq",
+                        "iconPath": "/static/images/QQ.png" // 图标路径仅支持本地图片
                     }
                 ]
             }
         },
         success(res: any) { // 登录成功
-            uni.navigateTo({
-                url: '/pages/login/LoginForm'
-            })
             const xhr = new plus.net.XMLHttpRequest();
-
             xhr.open("POST", "https://env-00jxh1npxgx4.dev-hz.cloudbasefunction.cn/getPhoneNumber"); // url应为云函数Url化之后的地址，可以在uniCloud web控制台云函数详情页面看到
             xhr.setRequestHeader('Content-Type', 'application/json');
             xhr.send(JSON.stringify({
@@ -134,13 +141,17 @@ function tologin() {
             console.log(status);
             if (status == '用户点击了自定义按钮') {
                 if (res.provider == 'qq') {
-                    showToast('qq')
+                    // showToast('qq')
+                    console.log(univerifyStyle)
+                    loginqq()
                 } else if (res.provider == 'sinaweibo') {
                     // showToast('微博')
                     loginsina()
                 }
             } else if (status == '用户点击了其他登录方式') {
-
+                uni.navigateTo({
+                    url: '/pages/login/LoginForm'
+                })
             } else if (status == '用户关闭验证界面') {
                 plus.runtime.quit()
             } else {
@@ -163,17 +174,41 @@ function showToast(params) {
         }
     });
 }
-function loginqq(provider: string) {
+function loginqq() {
+    plus.oauth.getServices(function (services) {
+        for (var i in services) {
+            var service = services[i];
+            // 获取QQ登录对象
+            if (service.id == 'qq') {
+                qqOauth.value = service;
+                break;
+            }
+        }
+        qqOauth.value.login(function (oauth) {
+            console.log(oauth);
+            uni.getUserInfo({
+                provider: 'qq',
+                success: function (info) {
+                    // 获取用户信息成功, info.authResult保存用户信息
+                    console.log(info);
 
+                },
+                fail(result) {
+                    console.log(result);
+                }
+            })
+            // 授权成功，qqOauth.authResult 中保存授权信息
+        }, function (err) {
+            console.log(err);
+            // err.code是错误码
+        })
+    }, function (err) {
+        // 获取 services 失败
+    })
 }
 function loginsina() {
-    // uni.login({
-    //     provider: 'sinaweibo',
-    //     success(res: any) {
-    // console.log(res)
     plus.oauth.getServices(function (services) {
         console.log(services);
-
         for (let i in services) {
             let service = services[i];
             // 获取新浪微博登录对象
@@ -183,28 +218,28 @@ function loginsina() {
             }
         }
         weiboOauth.value.login(function (oauth) {
-            console.log(oauth);
+            uni.getUserInfo({
+                provider: 'sinaweibo',
+                success: function (info) {
+                    // 获取用户信息成功, info.authResult保存用户信息
+                    console.log(info);
 
+                },
+                fail(result) {
+                    console.log(result);
+                }
+            })
+            console.log(oauth);
             // 授权成功，weiboOauth.authResult 中保存授权信息
         }, function (err) {
             console.log(err);
-
             // 登录授权失败
             // err.code是错误码
         })
     }, function (err) {
         console.log(err);
-
         // 获取 services 失败
     })
-    //     },
-    //     fail(res) {
-    //         console.log(res);
-
-    //     }
-    // }
-
-    // )
 }
 </script>
 

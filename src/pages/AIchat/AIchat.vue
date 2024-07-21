@@ -1,23 +1,245 @@
 <template>
-    <view>
+    <view class="chat-container">
+        <view class="navbar">
+            <Navbar :bgColor="'#a6ffcb'">
+                <template #left>
+                    <u-icon name="arrow-left" size="30" color="#ffffff" @click="back"></u-icon>
+                </template>
+                <template #center>
+                    <view>登录</view>
+                </template>
+            </Navbar>
+        </view>
+        <view class="chat-view" style="height: 65vh;width: 100%;overflow: auto;">
+            <view class="chat-view-content" id="chat">
 
+            </view>
+        </view>
+        <view class="chat-input">
+            <u-textarea class="chat-input-textarea" placeholder="请输入问题" v-model="text" :maxlength="200" count
+                :disabled="loading"></u-textarea>
+            <u-button class="chat-input-button" :loading="loading" @click="sendtext" type="primary">发送</u-button>
+        </view>
+        <u-toast ref="uToastRef"></u-toast>
     </view>
 </template>
 
 <script setup lang='ts'>
-import { onMounted, toRaw, ref, onUnmounted } from 'vue'
-import { webSoketInit, sendMessage, websoket, closeSocket } from '@/apis/websocket'
-let sendData = ref()
+import { onMounted, ref, toRaw, reactive, shallowRef, watch } from 'vue'
+import { fetchEventSource } from '@microsoft/fetch-event-source'
+import useUserStore from '@/store/user'
+import showToast from '@/utils/showtoast'
+import Navbar from "@/components/layout/navbar/navbar.vue"
+import 'abortcontroller-polyfill/dist/polyfill-patch-fetch'
+let chattext = shallowRef()// chat返回文本
+let loading = shallowRef(false)// 发送请求中
+let uToastRef = ref()
+const userStore = useUserStore()// 获取用户信息
+const userInfo = userStore.getUserInfo()// 获取用户信息
+const chatList = reactive({
+    chat: <any>[
+
+    ],
+    user: <any>[
+
+    ]
+})
+const historylist = [
+    {
+        "content": "你好",
+        "role": "user",
+    }
+]
+const pattern = /['"]|undefined/gi;// 去掉chat返回文本中的引号
+let text = shallowRef()// 用户输入文本
+//封装用户问题
+let usertext = reactive({
+    "content": "",
+    "role": "user"
+})
+const ctrl = new AbortController()// 一个控制器对象
 onMounted(() => {
-    webSoketInit()
-    sendMessage(JSON.stringify(toRaw(sendData.value)))
-    websoket.value.addEventListener('message', function (event) {
-        console.log('Message from server ', event.data)
+    sendrequest()// 加载组件后发送默认对话
+    document.body.style.background = "#f7f8fc"// 设置背景色
+})
+watch(text, (value) => {
+    console.log(value);
+
+    if (value == "") {
+        text.value = ""
+    }
+})
+// 监听返回的chattext
+watch(chattext, (value) => {
+    let chatcontinuity = document.querySelectorAll(".chat-view-ai-continuity")
+    chatcontinuity[chatcontinuity.length - 1]!.innerHTML = value
+})
+// 用户发送问题
+function sendtext() {
+    if (text.value == "") {
+        showToast(uToastRef.value, 'error', '请输入问题', 'close-circle')
+        return
+    } else {
+        chatList.user.push(text.value)// 用户输入的文本保存到chatList中
+        usertext.content = text.value// 封装用户问题
+        historylist.push(toRaw(usertext))
+        renderuser()// 渲染用户对话
+        sendrequest()// 发送对话请求
+        console.log(historylist);
+    }
+}
+// 封装对话请求
+function sendrequest() {
+    if (usertext.content == "") {
+        usertext.content = "你好"
+    }
+    fetchEventSource('http://feiniao-api.xkaipro.com:7940/chat/zhipu/message', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            messages: historylist,
+            system: "你是一名健康助手"
+        }),
+        signal: ctrl.signal,
+        openWhenHidden: true,
+        // 连接打开的回调
+        async onopen(response) {
+            console.log('onopen', response);
+            loading.value = true // 发送请求中
+            text.value = ""// 初始化用户问题
+            chattext.value = ""// 初始化chat返回文本
+            renderchat()// 渲染用户对话
+        },
+        // 接收到新消息时的回调
+        onmessage(msg) {
+            let term: string = ""// 创建文本缓存
+            term += msg.data.replace(pattern, '')// 去掉chat返回文本中的引号
+            chattext.value += term.replace(/[\\n]+/g, "<br />")// 替换chat返回数据中的\n换行符
+        },
+        // 连接关闭的回调
+        onclose() {
+            console.log('onclose')
+            chatList.chat.push(chattext.value)// 会话结束后保存到chatList中
+            historylist.push({
+                content: chatList.chat[chatList.chat.length - 1],
+                role: "assistant"
+            })
+            loading.value = false// 请求结束
+        },
+        // 发生错误时的回调
+        onerror(err) {
+            ctrl.abort(); // 中断请求
+            loading.value = false// 请求结束
+            showToast(uToastRef.value, 'error', err.message, 'close-circle')
+            uni.$u.toast(err.message)
+            throw err;
+        }
+    });
+}
+function renderchat() {
+    // 获取chat视图
+    const chat = document.getElementById("chat")
+    // 创建chat父容器
+    const ChatContainer = document.createElement('div')
+    ChatContainer!.className = "chat-view-ai-content"
+    ChatContainer.style.cssText = 'display: flex;align-items: flex-start;padding: 2.4vw;border-radius: 16px;margin-bottom: 10px;'
+    // 创建chat子文本节点
+    const chatcontinuity = document.createElement('div')
+    chatcontinuity!.className = "chat-view-ai-continuity"
+    chatcontinuity.style.cssText = 'line-height: 1.5;margin-left: 10px;background-color: bisque;padding: 2.4vw;border-radius: 16px; '
+    // 创建chat子图片节点
+    const chatimg = document.createElement('div')
+    chatimg!.className = "chat-view-ai-img"
+    chatimg!.style.cssText = 'width: 9.6vw;height: 9.6vw;min-width: 9.6vw;'
+    // 创建chat子图片节点下的图片
+    const img = document.createElement('img')
+    img!.src = '/src/assets/images/logo.png'
+    img!.style.cssText = 'width: 100%;height: 100%;'
+    chat!.appendChild(ChatContainer)
+    ChatContainer.appendChild(chatimg)
+    chatimg.appendChild(img)
+    ChatContainer.appendChild(chatcontinuity)
+}
+function renderuser() {
+    // 获取chat视图
+    const chat = document.getElementById("chat")
+    // 创建user父容器
+    const UserContainer = document.createElement('view')
+    UserContainer!.className = "chat-view-user-content"
+    UserContainer.style.cssText = 'display: flex;align-items: flex-start;flex-direction: row-reverse;padding: 2.4vw;border-radius: 16px;margin-bottom: 10px;'
+    // 创建user子文本节点
+    const UserText = document.createElement('view')
+    UserText!.className = "chat-view-user-text"
+    UserText.style.cssText = 'line-height: 1.5;margin-right: 10px;background-color: bisque;;padding: 2.4vw;border-radius: 16px;'
+    // 创建user子图片节点
+    const UserImg = document.createElement('view')
+    UserImg!.className = "chat-view-user-img"
+    UserImg!.style.cssText = 'width: 9.6vw;height: 9.6vw;min-width: 9.6vw;'
+    // 创建user子图片节点下的图片
+    const img = document.createElement('img')
+    img!.src = userInfo.avatar
+    img!.style.cssText = 'width: 100%;height: 100%;'
+    UserText.innerHTML = chatList.user[chatList.user.length - 1]
+    chat!.appendChild(UserContainer)
+    UserContainer.appendChild(UserImg)
+    UserImg.appendChild(img)
+    UserContainer.appendChild(UserText)
+}
+function back() {
+    uni.reLaunch({
+        url: '/pages/login/login'
     })
-})
-onUnmounted(() => {
-    closeSocket()
-})
+}
 </script>
 
-<style lang='scss' scoped></style>
+<style lang='scss' scoped>
+.chat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 10px;
+
+    .navbar {
+        // #ifdef H5
+        height: 100rpx;
+        //#endif
+        // #ifndef H5
+        height: 140rpx;
+        //#endif
+    }
+
+    .chat-view {
+        width: 100%;
+        background-color: $moduleBackgroundColor;
+        border: .26667vw solid rgba(87, 116, 95, 0.08);
+        border-radius: 16px;
+
+        .chat-view-content {
+            margin: 1.6vw;
+        }
+    }
+
+    .chat-input {
+        // display: flex;
+        // flex-direction: row;
+        // align-items: center;
+        width: calc(100% - 8.53333vw);
+        border: .26667vw solid rgba(87, 116, 95, 0.08);
+        border-radius: 16px;
+        padding: 3.2vw 4.26667vw;
+        background-color: $moduleBackgroundColor;
+        margin-top: 20rpx;
+
+        .chat-input-textarea {
+            // flex: 6;
+        }
+
+        .chat-input-button {
+            position: relative;
+            // flex: 1;
+        }
+    }
+}
+</style>

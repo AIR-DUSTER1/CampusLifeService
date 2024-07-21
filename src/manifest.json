@@ -59,7 +59,11 @@
                     "univerify" : {},
                     "sina" : {
                         "appkey" : "2595506221",
-                        "redirect_uri" : "http%3A%2F%2Fopen.weibo.com%2Fapps%2F2595506221%2Fprivilege%2Foauth",
+                        "redirect_uri" : "https://api.weibo.com/oauth2/default.html",
+                        "UniversalLinks" : ""
+                    },
+                    "qq" : {
+                        "appid" : "102150412",
                         "UniversalLinks" : ""
                     }
                 }

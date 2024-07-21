@@ -18,7 +18,7 @@
       <banner></banner>
     </view>
     <view class="btn-group">
-      <view class="btn-item" @click="routeto()" v-for="(item, index) in BtnItem" :key="index">
+      <view class="btn-item" @click="routeto(item.url)" v-for="(item, index) in BtnItem" :key="index">
         <u-image src="../../../static/images/chongzhi.png" shape="circle" width="100rpx" height="100rpx"></u-image>
         <text class="btn-text">123</text>
       </view>
@@ -59,7 +59,7 @@ let BtnItem = reactive([
     id: 0,
     img: '',
     text: '',
-    url: ""
+    url: "/pages/AIchat/AIchat"
   },
   {
     id: 1,
@@ -135,8 +135,10 @@ function takephoto() {
   //   }
   // })
 }
-function routeto() {
-
+function routeto(url: string) {
+  uni.navigateTo({
+    url: url
+  })
 }
 </script>
 

@@ -9,8 +9,9 @@
 import usetabbar from "@/store/tabbar"
 import { ref, reactive, onMounted } from 'vue'
 let badge = ref(1000)
-let active = ref('')
+let active = ref()
 const tabbar = usetabbar()
+let name = usetabbar().getActive
 let list = reactive([
     {
         id: 0,
@@ -50,17 +51,19 @@ let list = reactive([
     }
 ])
 onMounted(() => {
-    active.value = usetabbar().getActive
+    // #ifndef MP-WEIXIN
+    active.value = name
+    // #endif
 })
 function click(item) {
-    let name = usetabbar().getActive
     if (item.name != name) {
         tabbar.setActive(item.name)
-        active.value = name
-        console.log(active.value);
         uni.switchTab({
             url: item.pagePath,
             success() {
+                // #ifndef MP-WEIXIN
+                active.value = usetabbar().getActive
+                // #endif
             }
         })
     }

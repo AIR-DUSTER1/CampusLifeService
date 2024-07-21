@@ -2,9 +2,11 @@
   <view class="login">
     <view class="navbar">
       <Navbar :bgColor="'#a6ffcb'">
+        <!-- #ifndef MP-WEIXIN || WEB -->
         <template #left>
           <u-icon name="arrow-left" size="30" color="#ffffff" @click="back"></u-icon>
         </template>
+        <!-- #endif -->
         <template #center>
           <view>登录</view>
         </template>
@@ -18,8 +20,8 @@
       <u-form-item prop="phone" borderBottom v-if="!send">
         <u-input placeholder="请输入手机号" type="number" :border="'bottom'" v-model="form.phone" clearable></u-input>
       </u-form-item>
-      <u-form-item prop="verificationCode" borderBottom v-else>
-        <u-code-input v-model="form.verificationCode" @finish="finish" :focus="true" class="code"></u-code-input>
+      <u-form-item prop="verificationCode" class="code" borderBottom v-else>
+        <u-code-input v-model="form.verificationCode" @finish="finish" :focus="true"></u-code-input>
       </u-form-item>
       <u-button @click="submit" :disabled="send" class="login-btn">
         <view v-if="!send">获取验证码</view>
@@ -103,6 +105,9 @@ const finish = (value: string) => {
   if (value == "123456") {
     bordercolor.value = '#5ac725'
     uni.$u.toast('验证码正确')
+    uni.switchTab({
+      url: '/pages/tabbar/home/index'
+    })
   } else {
     bordercolor.value = '#f56c6c'
     uni.$u.toast('验证码错误')
@@ -113,8 +118,8 @@ function switchphone() {
   send.value = false
 }
 function back() {
-  uni.navigateBack({
-    delta: 1
+  uni.reLaunch({
+    url: '/pages/login/login'
   })
 }
 </script>
@@ -131,10 +136,12 @@ body {
   flex-direction: column;
 
   .navbar {
-    height: 88rpx;
+    height: 140rpx;
   }
 
   .logo {
+    margin-top: 50rpx;
+
     .logo-img {
       display: flex;
       justify-content: center;
@@ -154,7 +161,6 @@ body {
   .code {
     :deep(.u-code-input__item) {
       border-color: v-bind(bordercolor) !important;
-
     }
 
     :deep(.u-form-item__body__right__content__slot) {
