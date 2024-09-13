@@ -1,13 +1,21 @@
 import { defineStore } from 'pinia'
-
+import logo from '@/static/logo.png'
 const useUserStore = defineStore('login', {
     state() {
         return {
             token: "",
             username: "",
-            avatar: "",
-            teststr: '测试数据',
+            number: '',
+            email: '',
+            phone: '',
+            idNumber: '',
+            avatar: logo,
+            uid: 0,
+            authorities: ['']
         }
+    },
+    getters: {
+        userinfo: (state) => state,
     },
     actions: {
         getUserInfo() {
@@ -15,11 +23,14 @@ const useUserStore = defineStore('login', {
                 token: this.token,
                 username: this.username,
                 avatar: this.avatar,
-                teststr: this.teststr
+                uid: this.uid
             }
         },
-        setStr(newStr: string) {
-            this.teststr = newStr
+        saveUserInfo(data) {
+            this.token = data.access_token
+            this.username = data.username
+            this.avatar = data.avatar || logo
+            this.uid = data.uid
         },
     },
 })

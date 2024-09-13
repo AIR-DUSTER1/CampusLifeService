@@ -3,15 +3,19 @@
         <u-tabbar-item :text="item.text" :icon="fillicon(item)" @click="click(item)" v-for="item in list"
             :dot="item.badge != 0 ? true : false" :key="item.id" :name="item.name"></u-tabbar-item>
     </u-tabbar>
+
 </template>
 
 <script setup lang='ts'>
 import usetabbar from "@/store/tabbar"
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, computed } from 'vue'
+import { onLaunch, onShow, onHide } from "@dcloudio/uni-app"
 let badge = ref(1000)
 let active = ref()
 const tabbar = usetabbar()
-let name = usetabbar().getActive
+let name = computed(() => tabbar.getActive)
+let curPage = getCurrentPages();
+let route = curPage[curPage.length - 1].route
 let list = reactive([
     {
         id: 0,
@@ -24,7 +28,7 @@ let list = reactive([
     },
     {
         id: 1,
-        text: '校园卡',
+        text: '一卡通',
         icon: '/static/images/tabBar/card.png',
         selectedIconPath: "/static/images/tabBar/card-fill.png",
         name: "rmb-circle",
@@ -50,13 +54,12 @@ let list = reactive([
         badge: 0
     }
 ])
-onMounted(() => {
-    // #ifndef MP-WEIXIN
-    active.value = name
-    // #endif
+onShow(() => {
+    setCurrent(route)
+    active.value = name.value
 })
 function click(item) {
-    if (item.name != name) {
+    if (item.name != name.value) {
         tabbar.setActive(item.name)
         uni.switchTab({
             url: item.pagePath,
@@ -70,6 +73,17 @@ function click(item) {
 }
 function fillicon(item) {
     return usetabbar().getActive === item.name ? item.selectedIconPath : item.icon
+}
+function setCurrent(route: string | undefined) {
+    if (route == 'pages/tabbar/home/index') {
+        tabbar.setActive('home')
+    } else if (route == 'pages/tabbar/cards/index') {
+        tabbar.setActive('rmb-circle')
+    } else if (route == 'pages/tabbar/messages/index') {
+        tabbar.setActive('bell')
+    } else if (route == 'pages/tabbar/my/index') {
+        tabbar.setActive('account')
+    }
 }
 </script>
 

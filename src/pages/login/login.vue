@@ -1,7 +1,7 @@
 <template>
     <view>
         <u-button type="suecss" @click="tologin()" style="margin: auto auto;">登录</u-button>
-        <u-toast ref="uToastRef"></u-toast>
+        <u-toast ref="toast"></u-toast>
     </view>
 </template>
 
@@ -10,13 +10,15 @@ import { ref, reactive, onMounted } from 'vue'
 import judgeLoginStatus from '@/utils/LoginStatus'
 import usePlatform from '@/store/platform'
 import request from '@/utils/request'
+import showtoast from "@/utils/showtoast"
+const toast = ref()
 declare const plus: any
-const uToastRef = ref()
 let weiboOauth = ref()
 var qqOauth = ref()
 const app = usePlatform()
 let platform = app.getPlatform
 onMounted(() => {
+    showtoast.onbind(toast.value)
     if (platform == 'plus' || platform == 'nvue') {
         tologin()
     } else if (platform == 'weixin' || platform == 'mp' || platform == 'h5') {
@@ -104,32 +106,22 @@ function tologin() {
             }
         },
         success(res: any) { // 登录成功
-            const xhr = new plus.net.XMLHttpRequest();
-            xhr.open("POST", "https://env-00jxh1npxgx4.dev-hz.cloudbasefunction.cn/getPhoneNumber"); // url应为云函数Url化之后的地址，可以在uniCloud web控制台云函数详情页面看到
-            xhr.setRequestHeader('Content-Type', 'application/json');
-            xhr.send(JSON.stringify({
-                access_token: res.access_token, // 客户端一键登录接口返回的access_token
-                openid: res.openid // 客户端一键登录接口返回的openid
-            }))
-            xhr.onload = function (e) {
-                showToast(e)
-            }
-            xhr.onerror = function (e) {
-                showToast(e)
-            }
-            // uniCloud.callFunction({
-            //     name: 'getPhoneNumber',
-            //     data: {
-            //         access_token: res.access_token,
-            //         openid: res.openid
-            //     }
-            // }).then(res => {
-            //     console.log('LOGINr----', res);
-            // })
-            //     .catch(err => {
-            //         console.log('err----', err);
-            //     })
-            showToast(res)
+            request({
+                url: 'auth/app/login',
+                method: 'POST',
+                data: {
+                    access_token: res.authResult.access_token, // 客户端一键登录接口返回的access_token
+                    openid: res.authResult.openid, // 客户端一键登录接口返回的openid
+                    type: "univerify"
+                },
+                success: (res: any) => {
+                    console.log(res)
+                },
+                fail: (err: any) => {
+                    console.log(err)
+                }
+            })
+            showtoast.onSuccess(res)
             console.log(res.authResult);  // {openid:'登录授权唯一标识',access_token:'接口返回的 token'}
             uni.closeAuthView()
         },
@@ -142,7 +134,7 @@ function tologin() {
             if (status == '用户点击了自定义按钮') {
                 if (res.provider == 'qq') {
                     // showToast('qq')
-                    console.log(univerifyStyle)
+                    console.log()
                     loginqq()
                 } else if (res.provider == 'sinaweibo') {
                     // showToast('微博')
@@ -155,24 +147,11 @@ function tologin() {
             } else if (status == '用户关闭验证界面') {
                 plus.runtime.quit()
             } else {
-                showToast(status)
+                showtoast.onError(status)
                 uni.closeAuthView()
             }
         }
     })
-}
-function showToast(params) {
-    uToastRef!.value.show({
-        type: "success",
-        message: params,
-        position: 'bottom',
-        icon: "true",
-        complete() {
-            params.url && uni.navigateTo({
-                url: params.url
-            });
-        }
-    });
 }
 function loginqq() {
     plus.oauth.getServices(function (services) {
@@ -186,15 +165,19 @@ function loginqq() {
         }
         qqOauth.value.login(function (oauth) {
             console.log(oauth);
-            uni.getUserInfo({
-                provider: 'qq',
-                success: function (info) {
-                    // 获取用户信息成功, info.authResult保存用户信息
-                    console.log(info);
-
+            request({
+                url: 'auth/app/login',
+                method: 'POST',
+                data: {
+                    access_token: oauth.target.authResult.access_token, // 客户端一键登录接口返回的access_token
+                    openid: oauth.target.authResult.openid, // 客户端一键登录接口返回的openid
+                    type: "qq"
                 },
-                fail(result) {
-                    console.log(result);
+                success: (res: any) => {
+                    console.log(res)
+                },
+                fail: (err: any) => {
+                    console.log(err)
                 }
             })
             // 授权成功，qqOauth.authResult 中保存授权信息
@@ -218,15 +201,19 @@ function loginsina() {
             }
         }
         weiboOauth.value.login(function (oauth) {
-            uni.getUserInfo({
-                provider: 'sinaweibo',
-                success: function (info) {
-                    // 获取用户信息成功, info.authResult保存用户信息
-                    console.log(info);
-
+            request({
+                url: 'auth/app/login',
+                method: 'POST',
+                data: {
+                    access_token: oauth.target.authResult.access_token, // 客户端一键登录接口返回的access_token
+                    openid: oauth.target.authResult.openid, // 客户端一键登录接口返回的openid
+                    type: "sina"
                 },
-                fail(result) {
-                    console.log(result);
+                success: (res: any) => {
+                    console.log(res)
+                },
+                fail: (err: any) => {
+                    console.log(err)
                 }
             })
             console.log(oauth);

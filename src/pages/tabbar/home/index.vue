@@ -4,9 +4,7 @@
       <Navbar :bgColor="'#a6ffcb'">
         <template #left>
           <view>
-            <u-image :show-loading="true"
-              src="https://s.cn.bing.net/th?id=OJ.7biM5vCN4l0IUw&qlt=80&o=6&dpr=1.3&pid=SANGAM" width="60"
-              height="44px"></u-image>
+            <u-image :show-loading="true" src="/src/static/images/th.png" width="60" height="44px"></u-image>
           </view>
         </template>
         <template #right>
@@ -26,20 +24,21 @@
     <u-gap height="20"></u-gap>
     <view class="news">
       <u-cell-group title="新闻" :customStyle="{ 'fontSize': '32rpx' }">
-        <u-cell isLink v-for="(item, index) in list" :key="index">
+        <u-cell v-if="list.length > 0" isLink v-for="item in list" :key="item.nid">
           <template #title>
             <view class="img">
-              <u-image src="/static/images/chongzhi.png" width="100rpx" height="100rpx" />
+              <u-image :src="item.cover" width="100rpx" height="100rpx" lazyLoad />
             </view>
           </template>
           <template #value>
             <view class="text u-flex u-flex-direction-column">
-              <text class="title">123</text>
-              <text class="describe">123</text>
+              <text class="title">{{ item.title }}</text>
+              <text class="describe">{{ item.description }}</text>
             </view>
           </template>
         </u-cell>
       </u-cell-group>
+      <u-toast ref="toast"></u-toast>
     </view>
   </layout>
 </template>
@@ -47,9 +46,29 @@
 <script setup lang="ts">
 import usePlatform from '@/store/platform'
 import { reactive, ref, onMounted } from "vue"
+import { onLaunch, onReady, onHide } from "@dcloudio/uni-app"
 import layout from "@/components/layout/index.vue"
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import banner from "@/components/banner/banner.vue"
+import request from '@/utils/request'
+import showtoast from "@/utils/showtoast"
+interface newsList {
+  createTime: string
+  updateTime: string
+  createBy: string
+  updateBy: string
+  nid: Number
+  slug: string
+  title: string
+  author: string
+  content: string
+  cover: string
+  description: string
+  views: Number
+  published: boolean
+  deleted: boolean
+}
+const toast = ref()
 let src = ref()
 let scan = ref("0")
 const app = usePlatform()
@@ -86,32 +105,13 @@ let BtnItem = reactive([
     url: ""
   },
 ])
-let list = reactive([
-  {
-    id: 0,
-    img: "",
-    title: "",
-    desc: "",
-    url: ""
-  },
-  {
-    id: 1,
-    img: "",
-    title: "",
-    desc: "",
-    url: ""
-  },
-  {
-    id: 2,
-    img: "",
-    title: "",
-    desc: "",
-    url: ""
-  }
+let list = ref<newsList[]>([
 ]
 )
+onReady(() => {
+  getNews()
+})
 onMounted(() => {
-
   if (platform == 'h5') {
 
   } else if (platform == 'weixin' || platform == 'mp') {
@@ -138,6 +138,21 @@ function takephoto() {
 function routeto(url: string) {
   uni.navigateTo({
     url: url
+  })
+}
+function getNews() {
+  request({
+    url: '/news/list',
+    method: 'get',
+  }).then((res: any) => {
+    if (res.success) {
+      console.log(res.data)
+      list.value = res.data
+    } else {
+      showtoast.onError(res.message)
+    }
+  }).catch((err) => {
+    showtoast.onError(err)
   })
 }
 </script>
@@ -182,6 +197,10 @@ function routeto(url: string) {
   .news {
     background-color: $moduleBackgroundColor;
 
+    :deep(.u-cell__body__content) {
+      flex: none;
+    }
+
     :deep(.u-cell-group__title) {
       padding: 16rpx 32rpx;
     }
@@ -194,11 +213,28 @@ function routeto(url: string) {
     .img {}
 
     .text {
+      margin-left: 20rpx;
+      line-height: 1.5;
       display: flex;
+      flex-direction: column;
+      flex: 1;
+      width: 70%;
 
-      .title {}
+      .title {
+        font-size: 34rpx;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+      }
 
-      .describe {}
+      .describe {
+        font-size: 26rpx;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        color: $subtitle;
+        width: auto;
+      }
     }
   }
 }
