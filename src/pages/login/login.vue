@@ -1,22 +1,27 @@
 <template>
     <view>
-        <u-button type="suecss" @click="tologin()" style="margin: auto auto;">登录</u-button>
+        <!-- <u-button type="suecss" @click="tologin()" style="margin: auto auto;">登录</u-button> -->
+
         <u-toast ref="toast"></u-toast>
     </view>
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
+import { onLoad, onBackPress } from "@dcloudio/uni-app"
 import judgeLoginStatus from '@/utils/LoginStatus'
 import usePlatform from '@/store/platform'
 import request from '@/utils/request'
 import showtoast from "@/utils/showtoast"
 const toast = ref()
-declare const plus: any
 let weiboOauth = ref()
 var qqOauth = ref()
 const app = usePlatform()
 let platform = app.getPlatform
+const instance = getCurrentInstance()
+onBackPress(() => {
+    modal()
+})
 onMounted(() => {
     showtoast.onbind(toast.value)
     if (platform == 'plus' || platform == 'nvue') {
@@ -92,7 +97,7 @@ function tologin() {
                 ]
             },
             "buttons": {  // 自定义页面下方按钮仅全屏模式生效（3.1.14+ 版本支持）
-                "iconWidth": "45px", // 图标宽度（高度等比例缩放） 默认值：45px
+                "iconWidth": "40px", // 图标宽度（高度等比例缩放） 默认值：45px
                 "list": [
                     {
                         "provider": "sinaweibo",
@@ -106,23 +111,40 @@ function tologin() {
             }
         },
         success(res: any) { // 登录成功
+            // console.log(res.authResult)
             request({
-                url: 'auth/app/login',
+                url: '/auth/app/login',
                 method: 'POST',
                 data: {
                     access_token: res.authResult.access_token, // 客户端一键登录接口返回的access_token
                     openid: res.authResult.openid, // 客户端一键登录接口返回的openid
                     type: "univerify"
-                },
-                success: (res: any) => {
-                    console.log(res)
-                },
-                fail: (err: any) => {
-                    console.log(err)
                 }
+            }).then((res: any) => {
+                console.log(res)
+                if (res.success) {
+                    uni.setStorageSync('token', res.data.access_token)
+                    uni.switchTab({
+                        url: '/pages/tabbar/home/index'
+                    })
+                    showtoast.onSuccess('登录成功')
+                } else if (res.message == '用户未激活') {
+                    uni.navigateTo({
+                        url: '/pages/login/active'
+                    })
+                    showtoast.onError(res.message)
+                } else if (res.message == '用户不存在') {
+                    showtoast.onError(res.message)
+                    tologin()
+                } else {
+                    showtoast.onError(res.message)
+                }
+                console.log(res)
+            }).catch((err) => {
+                showtoast.onError(err)
             })
-            showtoast.onSuccess(res)
-            console.log(res.authResult);  // {openid:'登录授权唯一标识',access_token:'接口返回的 token'}
+            // showtoast.onSuccess(res)
+            // console.log(res.authResult);  // {openid:'登录授权唯一标识',access_token:'接口返回的 token'}
             uni.closeAuthView()
         },
         fail(res) {  // 登录失败
@@ -133,8 +155,7 @@ function tologin() {
             console.log(status);
             if (status == '用户点击了自定义按钮') {
                 if (res.provider == 'qq') {
-                    // showToast('qq')
-                    console.log()
+                    // showtoast.onInfo('qq')
                     loginqq()
                 } else if (res.provider == 'sinaweibo') {
                     // showToast('微博')
@@ -145,10 +166,17 @@ function tologin() {
                     url: '/pages/login/LoginForm'
                 })
             } else if (status == '用户关闭验证界面') {
-                plus.runtime.quit()
+                modal()
+                // plus.runtime.quit()
             } else {
                 showtoast.onError(status)
-                uni.closeAuthView()
+                modal()
+                // uni.openAppAuthorizeSetting({
+                //     success(res) {
+                //         console.log(res)
+                //     }
+                // })
+                // uni.closeAuthView()
             }
         }
     })
@@ -156,33 +184,44 @@ function tologin() {
 function loginqq() {
     plus.oauth.getServices(function (services) {
         for (var i in services) {
-            var service = services[i];
+            var service = services[i]
             // 获取QQ登录对象
             if (service.id == 'qq') {
-                qqOauth.value = service;
-                break;
+                qqOauth.value = service
+                break
             }
         }
         qqOauth.value.login(function (oauth) {
-            console.log(oauth);
             request({
-                url: 'auth/app/login',
+                url: '/auth/app/login',
                 method: 'POST',
                 data: {
                     access_token: oauth.target.authResult.access_token, // 客户端一键登录接口返回的access_token
                     openid: oauth.target.authResult.openid, // 客户端一键登录接口返回的openid
                     type: "qq"
-                },
-                success: (res: any) => {
-                    console.log(res)
-                },
-                fail: (err: any) => {
-                    console.log(err)
+                }
+            }).then((res: any) => {
+                if (res.success) {
+                    uni.setStorageSync('token', res.data.access_token)
+                    uni.switchTab({
+                        url: '/pages/tabbar/home/index'
+                    })
+                    showtoast.onSuccess('登录激活成功')
+                } else if (res.message == '用户未激活') {
+                    uni.navigateTo({
+                        url: '/pages/login/active'
+                    })
+                    showtoast.onError(res.message)
+                } else if (res.message == '用户不存在') {
+                    showtoast.onError(res.message)
+                    tologin()
+                } else {
+                    showtoast.onError(res.message)
                 }
             })
             // 授权成功，qqOauth.authResult 中保存授权信息
         }, function (err) {
-            console.log(err);
+            console.log(err)
             // err.code是错误码
         })
     }, function (err) {
@@ -191,32 +230,55 @@ function loginqq() {
 }
 function loginsina() {
     plus.oauth.getServices(function (services) {
-        console.log(services);
+        console.log(services)
         for (let i in services) {
-            let service = services[i];
+            let service = services[i]
             // 获取新浪微博登录对象
             if (service.id == 'sinaweibo') {
-                weiboOauth.value = service;
-                break;
+                weiboOauth.value = service
+                break
             }
         }
         weiboOauth.value.login(function (oauth) {
             request({
-                url: 'auth/app/login',
+                url: '/auth/app/login',
                 method: 'POST',
                 data: {
                     access_token: oauth.target.authResult.access_token, // 客户端一键登录接口返回的access_token
                     openid: oauth.target.authResult.openid, // 客户端一键登录接口返回的openid
                     type: "sina"
-                },
-                success: (res: any) => {
-                    console.log(res)
-                },
-                fail: (err: any) => {
-                    console.log(err)
                 }
+            }).then((res: any) => {
+                if (res.success) {
+                    uni.setStorageSync('token', res.data.access_token)
+                    uni.switchTab({
+                        url: '/pages/tabbar/home/index'
+                    })
+                    showtoast.onSuccess('登录激活成功')
+                } else if (res.message == '用户未激活') {
+                    uni.navigateTo({
+                        url: '/pages/login/active'
+                    })
+                    showtoast.onError(res.message)
+                } else if (res.message == '用户不存在') {
+                    instance?.proxy?.$forceUpdate()
+                    showtoast.onError(res.message)
+                    uni.showToast({
+                        title: '用户不存在',
+                        icon: 'none',
+                        duration: 3000,
+                        complete() {
+                            uni.reLaunch({
+                                url: '/pages/login/login'
+                            })
+                        },
+                    })
+                } else {
+                    showtoast.onError(res.message)
+                }
+            }).catch((err) => {
+                showtoast.onError(err)
             })
-            console.log(oauth);
             // 授权成功，weiboOauth.authResult 中保存授权信息
         }, function (err) {
             console.log(err);
@@ -226,6 +288,21 @@ function loginsina() {
     }, function (err) {
         console.log(err);
         // 获取 services 失败
+    })
+}
+function modal() {
+    uni.showModal({
+        title: '是否退出该应用?',
+        confirmText: '退出',
+        success: function (res) {
+            if (res.confirm) {
+                //此处把你退出后需要的方法写上就行
+                plus.runtime.quit()
+            } else if (res.cancel) {
+                //取消
+                tologin()
+            }
+        }.bind(instance?.appContext)//此处bind是关键
     })
 }
 </script>

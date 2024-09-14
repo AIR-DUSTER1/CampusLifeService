@@ -46,7 +46,7 @@
 <script setup lang="ts">
 import usePlatform from '@/store/platform'
 import { reactive, ref, onMounted } from "vue"
-import { onLaunch, onReady, onHide } from "@dcloudio/uni-app"
+import { onLoad, onReady } from "@dcloudio/uni-app"
 import layout from "@/components/layout/index.vue"
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import banner from "@/components/banner/banner.vue"

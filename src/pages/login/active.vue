@@ -100,9 +100,18 @@ function submit() {
     })
 }
 function back() {
-    uni.reLaunch({
-        url: '/pages/login/LoginForm'
-    })
+    let currentPages = getCurrentPages()
+    console.log(currentPages);
+
+    //     uni.redirectTo({
+    //     url: 'pages/login/login'
+    //   })
+    //     uni.navigateBack({
+    //         delta: 1,
+    //         fail(err) {
+    //             console.log(err)
+    //         }
+    //     })
 }
 </script>
 
@@ -118,6 +127,7 @@ function back() {
 
     .activeForm {
         width: 80%;
+        margin-top: 50rpx;
 
         :deep(.u-form-item__body__right__message) {
             margin-left: 0 !important;

@@ -3,8 +3,8 @@
     <view class="navbar">
       <Navbar :bgColor="'#a6ffcb'">
         <template #left>
-          <!-- #ifndef MP-WEIXIN  || VUE3 || H5-->
-          <u-icon name="arrow-left" size="30" color="#ffffff" @click="back"></u-icon>
+          <!-- #ifdef APP -->
+          <u-icon name="arrow-left" size="20" color="#303133" @click="back"></u-icon>
           <!-- #endif -->
         </template>
         <template #center>
@@ -203,12 +203,17 @@ function submit() {
       ).then((res: any) => {
         if (res.success) {
           console.log(res.data)
-          uni.setStorageSync('token', res.data.token)
+          uni.setStorageSync('token', res.data.access_token)
           showtoast.onSuccess('登录成功')
+          uni.switchTab({
+            url: '/pages/tabbar/home/index'
+          })
         } else if (res.message == '用户未激活') {
-          uni.redirectTo({
+          uni.navigateTo({
             url: '/pages/login/active'
           })
+          showtoast.onError(res.message)
+        } else {
           showtoast.onError(res.message)
         }
       }).catch((err) => {
@@ -244,15 +249,15 @@ const finish = (value: string) => {
         uni.switchTab({
           url: '/pages/tabbar/home/index'
         })
-      } else {
-        if (res.message == '用户未激活') {
-          uni.redirectTo({
-            url: '/pages/login/active'
-          })
-        }
+      } else if (res.message == '用户未激活') {
+        uni.navigateTo({
+          url: '/pages/login/active'
+        })
         bordercolor.value = '#f56c6c'
         showtoast.onError(res.message)
         send.value = false
+      } else {
+        showtoast.onError(res.message)
       }
     }).catch((err) => {
       bordercolor.value = '#f56c6c'
@@ -268,7 +273,7 @@ function switchphone() {
   send.value = false
 }
 function back() {
-  uni.reLaunch({
+  uni.redirectTo({
     url: '/pages/login/login'
   })
 }
