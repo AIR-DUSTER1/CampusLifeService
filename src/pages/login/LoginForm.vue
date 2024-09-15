@@ -51,8 +51,8 @@
       </u-button>
       <u-button @click="submit" v-else-if="currentLoginType == loginType.password" type="primary" formType
         shape="circle">登录</u-button>
-      <u-button @click="switchphone" v-if="send" class="login-btn" type="primary" formType
-        shape="circle">更换手机号</u-button>
+      <u-button @click="switchphone" v-if="send && currentLoginType == loginType.phone" type="primary"
+        formTypeclass="login-btn" formType shape="circle">更换手机号</u-button>
     </u-form>
     <u-toast ref="toast"></u-toast>
   </view>
@@ -136,6 +136,10 @@ const loginType = {
 onMounted(() => {
   loginForm.value.setRules(rules)
   showtoast.onbind(toast.value)
+
+  // if (condition) {
+
+  // }
 })
 function submit() {
   loginForm.value.validate().then((valid) => {

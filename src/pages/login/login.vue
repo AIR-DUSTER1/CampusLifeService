@@ -7,8 +7,8 @@
 </template>
 
 <script setup lang='ts'>
-import { ref, reactive, onMounted, getCurrentInstance } from 'vue'
-import { onLoad, onBackPress } from "@dcloudio/uni-app"
+import { ref, reactive, onUnmounted, onMounted, getCurrentInstance, onBeforeMount } from 'vue'
+import { onLoad, onBackPress, onReady } from "@dcloudio/uni-app"
 import judgeLoginStatus from '@/utils/LoginStatus'
 import usePlatform from '@/store/platform'
 import request from '@/utils/request'
@@ -17,14 +17,29 @@ const toast = ref()
 let weiboOauth = ref()
 var qqOauth = ref()
 const app = usePlatform()
+let token = ref()
+let tokenExist = ref()
 let platform = app.getPlatform
 const instance = getCurrentInstance()
 onBackPress(() => {
     modal()
 })
+onLoad(() => {
+    token.value = uni.getStorageSync('token')
+    console.log()
+    if (token.value != '' || token.value != null || token.value != undefined) {
+        tokenExist.value = true
+        uni.closeAuthView()
+        uni.switchTab({
+            url: '/pages/tabbar/home/index'
+        })
+    } else {
+        tokenExist.value = false
+    }
+})
 onMounted(() => {
     showtoast.onbind(toast.value)
-    if (platform == 'plus' || platform == 'nvue') {
+    if (!tokenExist.value && platform == 'plus' || platform == 'nvue') {
         tologin()
     } else if (platform == 'weixin' || platform == 'mp' || platform == 'h5') {
         uni.reLaunch({
@@ -36,7 +51,7 @@ onMounted(() => {
         success: function (res) {
             console.log(res.provider)// ['qq', 'univerify']
         }
-    });
+    })
 })
 function tologin() {
     uni.login({
@@ -168,6 +183,8 @@ function tologin() {
             } else if (status == '用户关闭验证界面') {
                 modal()
                 // plus.runtime.quit()
+            } else if (status == '一键登录失败' && uni.getStorageSync('token')) {
+
             } else {
                 showtoast.onError(status)
                 modal()

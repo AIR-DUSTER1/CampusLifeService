@@ -1,5 +1,6 @@
 import interceptor from './interceptor'
-export const baseURL = 'http://38.6.223.212:18080'
+import { settings } from '@/settings/settings'
+export const baseURL = settings.apiAddress
 // export const baseURL = 'https://1f71b30a.r10.cpolar.top'
 
 export interface ApiResult<T> {

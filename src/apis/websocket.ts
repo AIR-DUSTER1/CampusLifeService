@@ -1,10 +1,9 @@
 import { ref } from 'vue'
 const websoket = ref();
 
-const webSoketInit = () => {
-    const proto = window.location.protocol === 'http:' ? 'ws:' : 'wss:';
+const webSoketInit = (address: string) => {
     //路径
-    const wsUrl = `${proto}//${window.location.host}/kitop`;
+    const wsUrl = address
 
     websoket.value = uni.connectSocket({
         url: wsUrl,

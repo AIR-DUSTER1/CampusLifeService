@@ -1,6 +1,6 @@
 <template>
   <layout class="my">
-    <view class="user-info" @click="click">
+    <view class="user-info" @click="click()">
       <view class="user-info-avatar">
         <u-image :show-loading="true" :src="userinfo.avatar" width="50px" height="50px"></u-image>
       </view>
@@ -10,12 +10,7 @@
       '未绑定手机号' }}</view>
       </view>
       <view>
-        <svg t="1726123579682" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"
-          p-id="2311" width="16" height="16">
-          <path
-            d="M313.926 1008.647a35.387 35.387 0 0 1-22.867-8.345c-15.028-12.644-16.942-35.077-4.299-50.07l376.532-447.01L304.137 73.695c-12.608-15.064-10.585-37.462 4.48-50.07 15.063-12.607 37.46-10.584 50.068 4.48l378.266 452.358c11.054 13.222 11.018 32.512-0.073 45.698l-395.75 469.842c-7.044 8.345-17.087 12.644-27.202 12.644z"
-            fill="#313A48" p-id="2312"></path>
-        </svg>
+        <u-icon name="arrow-right" size="16" color="#A4A5A7"></u-icon>
       </view>
     </view>
     <view>
@@ -73,7 +68,7 @@ const store = useUserStore()
 let userinfo = computed(() => store.userinfo)
 function click() {
   uni.navigateTo({
-    url: '/pages/user/info'
+    url: '/pages/PersonalData/PersonalData'
   })
 }
 function cellClick(name: string) {
@@ -119,6 +114,11 @@ function cellClick(name: string) {
         font-size: 26rpx;
         color: $subtitle;
       }
+    }
+
+    .icon {
+      height: 32rpx;
+      width: 32rpx;
     }
   }
 

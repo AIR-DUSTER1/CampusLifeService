@@ -1,4 +1,3 @@
-
 {
     "name" : "飞鸟校园生活服务平台",
     "appid" : "__UNI__B8B6730",
@@ -24,7 +23,8 @@
         "modules" : {
             "Barcode" : {},
             "Camera" : {},
-            "OAuth" : {}
+            "OAuth" : {},
+            "LivePusher" : {}
         },
         /* 应用发布信息 */
         "distribute" : {
