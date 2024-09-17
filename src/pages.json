@@ -68,7 +68,65 @@
             "path": "pages/facialAuthentication/facialAuthentication",
             "style": {
                 "navigationStyle": "custom",
-                "navigationBarTitleText": "个人资料"
+                "navigationBarTitleText": "人脸认证"
+            }
+        },
+        {
+            "path": "pages/moreNews/moreNews",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "更多新闻"
+            }
+        },
+        {
+            "path": "pages/recharge/recharge",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "充值"
+            }
+        },
+        {
+            
+            "path": "pages/PersonalData/ModifyData",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "修改个人信息"
+            }
+        },
+        {
+            
+            "path": "pages/SystemSetting/SystemSetting",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "设置"
+            }
+        },
+        {
+            "path": "pages/AccountSecurity/AccountSecurity",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "账户安全"
+            }
+        },
+        {
+            "path": "pages/ChangePassword/ChangePassword",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "修改密码"
+            }
+        },
+        {
+            "path": "pages/ChangePhone/ChangePhone",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "修改手机号"
+            }
+        },
+        {
+            "path": "pages/article/article",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "新闻页"
             }
         }
     ],

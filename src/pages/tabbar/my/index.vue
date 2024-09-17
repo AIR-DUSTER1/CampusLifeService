@@ -16,7 +16,7 @@
     <view>
       <u-cell-group class="user-option" :border="false">
         <template v-for="(item, index) in cell">
-          <u-cell v-if="index != cell.length - 1" isLink :name="item.name" @click="cellClick(item.name)">
+          <u-cell v-if="index != cell.length - 1" isLink :name="item.name" @click="cellClick">
             <template #icon>
               <u-icon :name="item.icon" size="24"></u-icon>
             </template>
@@ -24,7 +24,7 @@
               {{ item.title }}
             </template>
           </u-cell>
-          <u-cell v-else :border="false" isLink :name="item.name" @click="cellClick(item.name)">
+          <u-cell v-else :border="false" isLink :name="item.name" @click="cellClick">
             <template #icon>
               <u-icon :name="item.icon" size="24"></u-icon>
             </template>
@@ -59,7 +59,7 @@ const cell = reactive([
     icon: 'edit-pen'
   },
   {
-    name: 'setting',
+    name: '/pages/SystemSetting/SystemSetting',
     title: '系统设置',
     icon: 'setting'
   }
@@ -71,12 +71,17 @@ function click() {
     url: '/pages/PersonalData/PersonalData'
   })
 }
-function cellClick(name: string) {
-  if (name == 'order') {
+function cellClick(item: any) {
+  console.log(item.name);
+  uni.navigateTo({
+    url: item.name
+  })
 
-  } else if (name == 'setting') {
+  // if (name == 'order') {
 
-  }
+  // } else if (name == 'setting') {
+
+  // }
 
 }
 </script>

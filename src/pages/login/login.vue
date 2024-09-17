@@ -13,6 +13,8 @@ import judgeLoginStatus from '@/utils/LoginStatus'
 import usePlatform from '@/store/platform'
 import request from '@/utils/request'
 import showtoast from "@/utils/showtoast"
+import useUserStore from '@/store/user'
+const store = useUserStore()
 const toast = ref()
 let weiboOauth = ref()
 var qqOauth = ref()
@@ -26,8 +28,7 @@ onBackPress(() => {
 })
 onLoad(() => {
     token.value = uni.getStorageSync('token')
-    console.log()
-    if (token.value != '' || token.value != null || token.value != undefined) {
+    if (token.value != '' && token.value != null && token.value != undefined) {
         tokenExist.value = true
         uni.closeAuthView()
         uni.switchTab({
@@ -138,7 +139,9 @@ function tologin() {
             }).then((res: any) => {
                 console.log(res)
                 if (res.success) {
+                    store.setUid(res.data.uid)
                     uni.setStorageSync('token', res.data.access_token)
+                    uni.setStorageSync('uid', res.data.uid)
                     uni.switchTab({
                         url: '/pages/tabbar/home/index'
                     })
@@ -219,7 +222,9 @@ function loginqq() {
                 }
             }).then((res: any) => {
                 if (res.success) {
+                    store.setUid(res.data.uid)
                     uni.setStorageSync('token', res.data.access_token)
+                    uni.setStorageSync('uid', res.data.uid)
                     uni.switchTab({
                         url: '/pages/tabbar/home/index'
                     })
@@ -267,7 +272,9 @@ function loginsina() {
                 }
             }).then((res: any) => {
                 if (res.success) {
+                    store.setUid(res.data.uid)
                     uni.setStorageSync('token', res.data.access_token)
+                    uni.setStorageSync('uid', res.data.uid)
                     uni.switchTab({
                         url: '/pages/tabbar/home/index'
                     })

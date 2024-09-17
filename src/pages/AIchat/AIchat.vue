@@ -3,6 +3,7 @@
         <web-view :src='websrc' class="webview"
             style=" height: calc(100vh-140rpx);margin-top: 140rpx;margin-bottom: 280rpx;"></web-view>
         <u-toast ref="uToastRef"></u-toast>
+        <up-keyboard ref="uKeyboard" mode="car" :show="show"></up-keyboard>
     </view>
 </template>
 
@@ -12,8 +13,10 @@ import useUserStore from '@/store/user'
 import { onLaunch, onShow, onHide } from "@dcloudio/uni-app"
 import showToast from '@/utils/showtoast'
 const userStore = useUserStore()// 获取用户信息
-const userInfo = userStore.getUserInfo()// 获取用户信息
-let websrc = 'http://ai.airduster1.top/?userid=' + userInfo.id + 'token' + userInfo.token
+const userInfo = userStore.userinfo// 获取用户信息
+let uid = uni.getStorageSync('uid')
+let show = ref(false)
+let websrc = 'http://ai.airduster1.top/?userid=' + uid + 'token' + userInfo.token
 const uToastRef = ref()
 let keyheight = "0px"
 // #ifdef APP-PLUS

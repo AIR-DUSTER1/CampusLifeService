@@ -25,12 +25,11 @@
       </u-form-item>
       <div v-else-if="!send && currentLoginType == loginType.password">
         <u-form-item prop="studentId" borderBottom>
-          <u-input placeholder="请输入学号" type="number" :border="'bottom'" v-model.trim="form.studentId"
+          <u-input placeholder="请输入学号/邮箱/手机号" type="text" :border="'bottom'" v-model.trim="form.studentId"
             clearable></u-input>
         </u-form-item>
         <u-form-item prop="password" borderBottom>
           <u-input placeholder="请输入密码" type="password" :border="'bottom'" v-model.trim="form.password" clearable>
-
           </u-input>
         </u-form-item>
       </div>
@@ -59,10 +58,12 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, reactive, ref } from "vue"
+import { onMounted, reactive, ref, computed } from "vue"
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import request from "@/utils/request"
 import showtoast from "@/utils/showtoast"
+import useUserStore from '@/store/user'
+const store = useUserStore()
 const loginForm = ref()
 let send = ref(false)
 let countDown = ref(60)
@@ -110,15 +111,9 @@ const rules = reactive({
   studentId: [
     {
       required: true,
-      message: "学号不能为空",
+      message: "学号/邮箱/手机号不能为空",
       trigger: "blur",
     },
-    {
-      type: "string",
-      pattern: /^[0-9]{11}$/,
-      message: "学号格式不正确",
-      trigger: ["blur", "change"],
-    }
   ],
   password: [
     {
@@ -136,10 +131,12 @@ const loginType = {
 onMounted(() => {
   loginForm.value.setRules(rules)
   showtoast.onbind(toast.value)
-
-  // if (condition) {
-
-  // }
+  let token = uni.getStorageSync('token')
+  if (token != '' && token != null && token != undefined) {
+    uni.switchTab({
+      url: '/pages/tabbar/home/index'
+    })
+  }
 })
 function submit() {
   loginForm.value.validate().then((valid) => {
@@ -207,7 +204,9 @@ function submit() {
       ).then((res: any) => {
         if (res.success) {
           console.log(res.data)
+          store.setUid(res.data.uid)
           uni.setStorageSync('token', res.data.access_token)
+          uni.setStorageSync('uid', res.data.uid)
           showtoast.onSuccess('登录成功')
           uni.switchTab({
             url: '/pages/tabbar/home/index'
@@ -248,7 +247,9 @@ const finish = (value: string) => {
       if (res.success) {
         console.log(res.data);
         bordercolor.value = '#5ac725'
+        store.setUid(res.data.uid)
         uni.setStorageSync('token', res.data.token)
+        uni.setStorageSync('uid', res.data.uid)
         showtoast.onSuccess('登录成功')
         uni.switchTab({
           url: '/pages/tabbar/home/index'

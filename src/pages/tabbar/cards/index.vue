@@ -3,7 +3,15 @@
         <u-gap height="50rpx" bgColor="#F3F4F6"></u-gap>
         <view class="card-info">
             <view>
-
+                <view class="card-title">
+                    一卡通：
+                </view>
+                <view class="card-subtitle">
+                    学号/工号：
+                </view>
+            </view>
+            <view class="card-number">
+                卡号：
             </view>
         </view>
         <view class="card-btn">
@@ -21,6 +29,8 @@
 <script setup lang='ts'>
 import layout from "@/components/layout/index.vue"
 import { reactive, ref, onMounted } from "vue"
+import { settings } from "@/settings/settings"
+let cardbg = ref(settings.cardBg)
 let BtnItem = reactive([
     {
         icon: 'scan',
@@ -52,9 +62,30 @@ function routeto() {
     height: 100vh;
 
     .card-info {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
         background-color: $moduleBackgroundColor;
-        margin: 5rpx 10rpx;
+        margin: 20rpx 10rpx;
+        padding: 40rpx;
         border-radius: 8px;
+        height: 460rpx;
+        background-image: url('@/static/images/card.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: #0080ff;
+
+        .card-title {
+            font-size: 40rpx;
+        }
+
+        .card-subtitle {
+            font-size: 40rpx;
+        }
+
+        .card-number {
+            text-align: end;
+        }
     }
 
     .card-btn {
