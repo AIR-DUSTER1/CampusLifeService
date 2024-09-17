@@ -24,7 +24,7 @@ import { onMounted, ref, toRaw, reactive, shallowRef, watch, onUnmounted } from 
 import { onLoad } from "@dcloudio/uni-app"
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import request from '@/utils/request'
-let sendData = ref().
+let sendData = ref()
 let slug = ref()
 onLoad((query: any) => {
     if (query) {
