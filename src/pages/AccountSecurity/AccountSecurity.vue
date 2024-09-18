@@ -12,6 +12,9 @@
                 </view>
             </template>
         </Navbar>
+        <!-- #ifdef APP -->
+        <u-gap height="30"></u-gap>
+        <!-- #endif -->
         <view class="AccountSecurity-list">
             <u-cell-group v-for="item in AccountSecurityList" :key="item.title">
                 <u-cell isLink v-if="item.title != '绑定QQ登录' && item.title != '绑定微博登录'"

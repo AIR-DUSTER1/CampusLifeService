@@ -1,6 +1,6 @@
 <template>
   <layout class="my">
-    <view class="user-info" @click="click()">
+    <view class="user-info" @click="click()" v-if="userinfo.username != ''">
       <view class="user-info-avatar">
         <u-image :show-loading="true" :src="userinfo.avatar" width="50px" height="50px"></u-image>
       </view>
@@ -36,12 +36,17 @@
       </u-cell-group>
     </view>
   </layout>
+  <u-toast ref="toast"></u-toast>
 </template>
 
 <script setup lang='ts'>
-import { computed, reactive } from 'vue'
+import { computed, reactive, onMounted, ref } from 'vue'
 import layout from "@/components/layout/index.vue"
 import useUserStore from '@/store/user'
+import request from '@/utils/request'
+import showtoast from "@/utils/showtoast"
+let uid = uni.getStorageSync('uid')
+const toast = ref()
 const cell = reactive([
   {
     name: 'order',
@@ -66,6 +71,10 @@ const cell = reactive([
 ])
 const store = useUserStore()
 let userinfo = computed(() => store.userinfo)
+onMounted(() => {
+  showtoast.onbind(toast.value)
+  getUserinfo()
+})
 function click() {
   uni.navigateTo({
     url: '/pages/PersonalData/PersonalData'
@@ -76,13 +85,22 @@ function cellClick(item: any) {
   uni.navigateTo({
     url: item.name
   })
+}
 
-  // if (name == 'order') {
-
-  // } else if (name == 'setting') {
-
-  // }
-
+function getUserinfo() {
+  if (userinfo.value.phone == '') {
+    request({
+      url: `/user/${uid}`,
+    }).then((res) => {
+      if (res.success) {
+        store.saveUserInfo(res.data)
+      } else {
+        showtoast.onError(res.message)
+      }
+    }).catch((err) => {
+      showtoast.onError(err)
+    })
+  }
 }
 </script>
 

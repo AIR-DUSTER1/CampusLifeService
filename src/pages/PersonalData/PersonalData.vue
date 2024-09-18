@@ -47,7 +47,15 @@
                             </view>
                         </template>
                         <template #value>
-                            <view class="text">{{ userInfo[item.value] }}</view>
+                            <view v-if="item.title == '手机号'" class="text">
+                                {{ userInfo[item.value] ? userInfo[item.value].replace(/(\d{3})\d{4}(\d{4})/,
+            '$1****$2') : userInfo[item.value] }}
+                            </view>
+                            <view v-else-if="item.title == '邮箱'" class="text">
+                                {{ userInfo[item.value] ? userInfo[item.value].replace(/^(.{2})(.*?)(@.*)/, '$1****$3')
+            : userInfo[item.value] }}
+                            </view>
+                            <view v-else class="text">{{ userInfo[item.value] }}</view>
                         </template>
                     </u-cell>
                 </u-list-item>
@@ -113,24 +121,8 @@ let list = ref([
 ])
 onMounted(() => {
     showtoast.onbind(toast.value)
-    getUserinfo()
 })
 
-function getUserinfo() {
-    if (userInfo.value.phone == '') {
-        request({
-            url: `/user/${uid}`,
-        }).then((res) => {
-            if (res.success) {
-                store.saveUserInfo(res.data)
-            } else {
-                showtoast.onError(res.message)
-            }
-        }).catch((err) => {
-            showtoast.onError(err)
-        })
-    }
-}
 function modify(item) {
     if (item.title == '头像') {
         upload()

@@ -8,10 +8,13 @@
             </template>
             <template #center>
                 <view>
-                    <text>修改个人资料</text>
+                    <text>修改性别</text>
                 </view>
             </template>
         </Navbar>
+        <!-- #ifdef APP -->
+        <u-gap height="20"></u-gap>
+        <!-- #endif -->
         <view class="form">
             <u-form labelPosition="left" :model="form" ref="userForm">
                 <u-form-item label="姓名：" prop="username" labelWidth="80">
@@ -21,14 +24,6 @@
                 <u-form-item label="性别：" prop="sex" @click="showSex = true; disabled = true" labelWidth="80">
                     <u-input v-model="form.sex" :disabled="disabled" placeholder="请选择性别" border="bottom"
                         clearable></u-input>
-                </u-form-item>
-                <u-form-item label="手机号：" prop="phone" labelWidth="80">
-                    <u-input disabled v-model="form.phone" placeholder="请输入手机号" border="bottom" color="#AFAFAF"
-                        disabledColor="#ffffff" clearable></u-input>
-                </u-form-item>
-                <u-form-item label="邮箱：" prop="email" labelWidth="80">
-                    <u-input disabled v-model="form.email" placeholder="请输入邮箱" border="bottom" color="#AFAFAF"
-                        disabledColor="#ffffff" clearable></u-input>
                 </u-form-item>
                 <u-button type="primary" shape="circle" formType @click="check" throttleTime="80"
                     class="btn">修改</u-button>
@@ -56,22 +51,12 @@ let showSex = ref(false)
 let userForm = ref()
 let form = reactive({
     username: userInfo.value.username,
-    email: userInfo.value.email,
-    phone: userInfo.value.phone,
     sex: userInfo.value.sex,
 })
 const rules = reactive({
     sex: [
         { required: true, message: '性别不能为空', trigger: 'blur' }
     ],
-    phone: [
-        { required: true, message: '手机号不能为空', trigger: 'blur' },
-        { pattern: /^1[3456789]\d{9}$/, message: '手机号格式不正确', trigger: 'blur' }
-    ],
-    email: [
-        { required: true, message: '邮箱不能为空', trigger: 'blur' },
-        { pattern: /^[a-zA-Z0-9_-]+@[a-z]/, message: '邮箱格式不正确', trigger: 'blur' }
-    ]
 })
 const list = ref([
     {
@@ -107,7 +92,9 @@ function submit() {
         }
     }).then((res) => {
         if (res.success) {
+            store.setSex(form.sex)
             showtoast.onSuccess('修改成功')
+            back()
         } else if (res.message != null) {
             showtoast.onError(res.message)
         } else {

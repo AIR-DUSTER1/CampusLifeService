@@ -10,16 +10,29 @@
                 </view>
             </template>
         </Navbar>
-        <u-list @scrolltolower="scrolltolower" class="list" v-show="!upEmpty">
-            <u-list-item v-for="(item, index) in messageList" :key="index">
-                <u-cell :title="`列表长度-${index + 1}`">
-                    <template #icon>
-                        <!-- <up-avatar shape="square" size="35" :src="item.url"
-                                customStyle="margin: -3px 5px -3px 0"></up-avatar> -->
-                    </template>
-                </u-cell>
-            </u-list-item>
-        </u-list>
+        <!-- #ifdef APP -->
+        <u-gap height="20"></u-gap>
+        <!-- #endif -->
+        <view class="Message-list" v-if="!upEmpty">
+            <u-list @scrolltolower='scrolltolower' class="list">
+                <u-list-item>
+                    <u-cell v-for="item in messageList" isLink @click="toMessage(item)">
+                        <template #title>
+                            <!-- <view class="img">
+                                <u-image :src="item.cover" width="100rpx" height="100rpx" lazyLoad />
+                            </view> -->
+                        </template>
+                        <template #value>
+                            <!-- <view class="text u-flex u-flex-direction-column">
+                                <text class="title">{{ item.title }}</text>
+                                <text class="describe">{{ item.description }}</text>
+                            </view> -->
+                        </template>
+                    </u-cell>
+                </u-list-item>
+            </u-list>
+        </view>
+        <u-toast ref="toast"></u-toast>
         <u-empty class="empty" :show="upEmpty" mode="message" text="暂无通知">
         </u-empty>
     </layout>
@@ -30,7 +43,10 @@ import layout from "@/components/layout/index.vue"
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import { ref, reactive, watch } from 'vue'
 import { onLoad, onShow } from '@dcloudio/uni-app'
+import request from '@/utils/request'
+import showtoast from "@/utils/showtoast"
 let upEmpty = ref(true)
+let toast = ref()
 interface message {
     title: string,
     content: string
@@ -39,6 +55,7 @@ let messageList = reactive<message[]>([
 
 ])
 onLoad(() => {
+    showtoast.onbind(toast.value)
     loadmore()
     empty()
 })
@@ -60,8 +77,13 @@ function empty() {
     if (messageList.length == 0) {
         upEmpty.value = true
     } else if (messageList.length > 0) {
-        upEmpty.value = true
+        upEmpty.value = false
     }
+}
+function toMessage(item) {
+    // uni.navigateTo({
+    //     url: '/pages/message/message?id=' + item.id
+    // })
 }
 </script>
 

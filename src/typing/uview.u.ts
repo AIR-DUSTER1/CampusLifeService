@@ -215,4 +215,5 @@ export interface $u {
     pages: any
     setConfig: USetConfig
     throttle: any
+    debounce: any
 }

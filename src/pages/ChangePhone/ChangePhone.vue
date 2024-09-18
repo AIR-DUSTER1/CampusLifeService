@@ -12,6 +12,9 @@
                 </view>
             </template>
         </Navbar>
+        <!-- #ifdef APP -->
+        <u-gap height="30"></u-gap>
+        <!-- #endif -->
         <view class="change-phone-form" v-if="current == 'phone'">
             <u-form ref="verificationForm" class="verificationForm" :model="form" v-if="!changePhoneNumber">
                 <u-form-item label="手机号" prop="phone" labelWidth="60">
@@ -21,7 +24,7 @@
                 <u-form-item label="验证码" prop="captcha" labelWidth="60">
                     <u-input class="captcha" type="number" v-model="form.captcha" placeholder="请输入验证码" :maxlength="6"
                         border="bottom" clearable></u-input>
-                    <u-button class="btn" type="primary" @click="sendVerificationCode(userInfo.phone, '')">
+                    <u-button class="btn" type="primary" @click="sendVerificationCode(parseInt(userInfo.phone) , '')">
                         <view v-if="sendcode">{{ time }}秒后重试</view>
                         <view v-else>发送验证码</view>
                     </u-button>
@@ -95,6 +98,7 @@ const verificationForm = ref()
 let changePhoneNumber = ref(false)
 let sendcode = ref(false)
 let time = ref(60)
+let title = ref()
 let form = ref(
     {
         phone: userInfo.value.phone,
@@ -126,8 +130,10 @@ onLoad((query: any) => {
         console.log('无参数')
     } else if (query.type == 'phone') {
         current.value = 'phone'
+        title.value = '修改手机号'
     } else if (query.type == 'email') {
         current.value = 'email'
+        title.value = '修改邮箱'
     }
 })
 onMounted(() => {

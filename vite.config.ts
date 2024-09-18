@@ -6,6 +6,7 @@ import path from "path";
 export default defineConfig(() => {
   return {
     server: {
+      hmr: true,
       host: false,
     },
     resolve: {

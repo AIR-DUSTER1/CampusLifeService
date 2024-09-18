@@ -191,7 +191,7 @@ function getNews() {
 }
 function moreNews() {
   uni.navigateTo({
-    url: '/pages/MoreNews/MoreNews'
+    url: '/pages/moreNews/moreNews'
   })
 }
 function toNews(item) {

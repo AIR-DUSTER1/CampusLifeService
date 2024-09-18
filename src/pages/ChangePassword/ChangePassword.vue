@@ -12,11 +12,14 @@
                 </view>
             </template>
         </Navbar>
+        <!-- #ifdef APP -->
+        <u-gap height="20"></u-gap>
+        <!-- #endif -->
         <view class="changeForm">
             <u-form ref="changeForm" :model="form">
                 <u-form-item leftIconStyle prop="phone">
                     <u-input prefixIcon="phone" v-model="form.phone" disabled color="#AFAFAF" disabledColor="#ffffff"
-                        type="number" border="bottom"></u-input>
+                        type="text" border="bottom"></u-input>
                 </u-form-item>
                 <u-form-item prop="verificationCode">
                     <u-input class="verificationCode" v-model="form.verificationCode" type="number" placeholder="请输入验证码"

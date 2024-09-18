@@ -12,7 +12,9 @@
                 </view>
             </template>
         </Navbar>
-        <u-gap height="20" bgColor="#F3F4F6"></u-gap>
+        <!-- #ifdef APP -->
+        <u-gap height="30"></u-gap>
+        <!-- #endif -->
         <view class="setting-list">
             <u-cell-group>
                 <u-cell isLink v-for="item in settingList" :key="item.url" @click="toPage(item.url)">
