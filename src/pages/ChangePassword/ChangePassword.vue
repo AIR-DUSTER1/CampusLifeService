@@ -23,11 +23,14 @@
                 </u-form-item>
                 <u-form-item prop="verificationCode">
                     <u-input class="verificationCode" v-model="form.verificationCode" type="number" placeholder="请输入验证码"
-                        border="bottom"></u-input>
-                    <u-button type="primary" @click="sendVerificationCode" class="btn">
-                        <view v-if="sendcode">{{ time }}秒后重试</view>
-                        <view v-else>发送验证码</view>
-                    </u-button>
+                        border="bottom">
+                        <template #suffix>
+                            <u-button type="primary" @click="sendVerificationCode" class="btn">
+                                <view v-if="sendcode">{{ time }}秒后重试</view>
+                                <view v-else>发送验证码</view>
+                            </u-button>
+                        </template>
+                    </u-input>
                 </u-form-item>
                 <u-form-item prop="oldPassword">
                     <u-input prefixIcon="lock" v-model="form.oldPassword" type="password" placeholder="请输入原密码"

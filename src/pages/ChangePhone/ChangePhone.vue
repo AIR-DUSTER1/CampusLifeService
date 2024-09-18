@@ -23,11 +23,15 @@
                 </u-form-item>
                 <u-form-item label="验证码" prop="captcha" labelWidth="60">
                     <u-input class="captcha" type="number" v-model="form.captcha" placeholder="请输入验证码" :maxlength="6"
-                        border="bottom" clearable></u-input>
-                    <u-button class="btn" type="primary" @click="sendVerificationCode(parseInt(userInfo.phone) , '')">
-                        <view v-if="sendcode">{{ time }}秒后重试</view>
-                        <view v-else>发送验证码</view>
-                    </u-button>
+                        border="bottom" clearable>
+                        <template #suffix>
+                            <u-button class="btn" type="primary"
+                                @click="sendVerificationCode(parseInt(userInfo.phone), '')">
+                                <view v-if="sendcode">{{ time }}秒后重试</view>
+                                <view v-else>发送验证码</view>
+                            </u-button>
+                        </template>
+                    </u-input>
                 </u-form-item>
                 <u-button type="primary" class="next" @click="checkphone()">下一步</u-button>
             </u-form>
@@ -38,11 +42,14 @@
                 </u-form-item>
                 <u-form-item label="验证码" prop="code" labelWidth="60">
                     <u-input v-model="form.code" type="number" placeholder="请输入验证码" :maxlength="6" border="bottom"
-                        clearable></u-input>
-                    <u-button type="primary" @click="sendVerificationCode(form.newPhone, '')">
-                        <view v-if="sendcode">{{ time }}秒后重试</view>
-                        <view v-else>发送验证码</view>
-                    </u-button>
+                        clearable>
+                        <template #suffix>
+                            <u-button type="primary" @click="sendVerificationCode(form.newPhone, '')">
+                                <view v-if="sendcode">{{ time }}秒后重试</view>
+                                <view v-else>发送验证码</view>
+                            </u-button>
+                        </template>
+                    </u-input>
                 </u-form-item>
                 <u-button type="primary" class="submit" @click="submit()">提交</u-button>
             </u-form>
@@ -55,11 +62,14 @@
                 </u-form-item>
                 <u-form-item label="验证码" prop="captcha" labelWidth="60">
                     <u-input class="captcha" type="number" v-model="form.captcha" placeholder="请输入验证码" :maxlength="6"
-                        border="bottom" clearable></u-input>
-                    <u-button class="btn" type="primary" @click="sendVerificationCode(0, userInfo.email)">
-                        <view v-if="sendcode">{{ time }}秒后重试</view>
-                        <view v-else>发送验证码</view>
-                    </u-button>
+                        border="bottom" clearable>
+                        <template #suffix>
+                            <u-button class="btn" type="primary" @click="sendVerificationCode(0, userInfo.email)">
+                                <view v-if="sendcode">{{ time }}秒后重试</view>
+                                <view v-else>发送验证码</view>
+                            </u-button>
+                        </template>
+                    </u-input>
                 </u-form-item>
                 <u-button type="primary" class="next" @click="checkemail()">下一步</u-button>
             </u-form>
@@ -70,11 +80,14 @@
                 </u-form-item>
                 <u-form-item label="验证码" prop="code" labelWidth="60">
                     <u-input v-model="form.code" type="number" placeholder="请输入验证码" :maxlength="6" border="bottom"
-                        clearable></u-input>
-                    <u-button type="primary" @click="sendVerificationCode(0, form.newEmail)">
-                        <view v-if="sendcode">{{ time }}秒后重试</view>
-                        <view v-else>发送验证码</view>
-                    </u-button>
+                        clearable>
+                        <template #suffix>
+                            <u-button type="primary" @click="sendVerificationCode(0, form.newEmail)">
+                                <view v-if="sendcode">{{ time }}秒后重试</view>
+                                <view v-else>发送验证码</view>
+                            </u-button>
+                        </template>
+                    </u-input>
                 </u-form-item>
                 <u-button type="primary" class="submit" @click="submit()">提交</u-button>
             </u-form>

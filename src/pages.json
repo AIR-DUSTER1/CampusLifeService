@@ -128,6 +128,20 @@
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "新闻页"
             }
+        },
+        {
+            "path": "pages/CommonProblem/CommonProblem",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "常见问题"
+            }
+        },
+        {
+            "path": "pages/ComplaintsAndSuggestions/ComplaintsAndSuggestions",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "常见问题"
+            }
         }
     ],
     "tabBar": {

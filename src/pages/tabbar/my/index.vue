@@ -7,7 +7,7 @@
       <view class="user-info-name">
         <view class="user-info-username">{{ userinfo.username ? userinfo.username : '未设置昵称' }}</view>
         <view class="user-info-phone">{{ userinfo.phone ? userinfo.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2') :
-      '未绑定手机号' }}</view>
+          '未绑定手机号' }}</view>
       </view>
       <view>
         <u-icon name="arrow-right" size="16" color="#A4A5A7"></u-icon>
@@ -54,12 +54,12 @@ const cell = reactive([
     icon: 'order'
   },
   {
-    name: 'question-circle',
+    name: '/pages/CommonProblem/CommonProblem',
     title: '常见问题',
     icon: 'question-circle'
   },
   {
-    name: 'edit-pen',
+    name: '/pages/ComplaintsAndSuggestions/ComplaintsAndSuggestions',
     title: '投诉建议',
     icon: 'edit-pen'
   },
