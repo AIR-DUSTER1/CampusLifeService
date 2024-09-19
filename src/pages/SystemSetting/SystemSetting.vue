@@ -29,12 +29,15 @@
                 <u-button type="error" @click="exitLogin" class="exit-login">退出登录</u-button>
             </u-cell-group>
         </view>
+        <u-toast ref="toast"></u-toast>
     </view>
 </template>
 
 <script setup lang='ts'>
-import { onMounted, ref, toRaw, reactive, shallowRef, watch, onUnmounted } from 'vue'
+import { onMounted, ref } from 'vue'
 import Navbar from "@/components/layout/navbar/navbar.vue"
+import showtoast from "@/utils/showtoast"
+const toast = ref()
 let settingList = [
     {
         title: '账户安全',
@@ -44,20 +47,26 @@ let settingList = [
     {
         title: '版本号',
         value: '1.0.0',
-        url: ''
+        url: 'update'
     },
     {
         title: '关于我们',
         value: '',
-        url: ''
+        url: '/pages/AboutUs/AboutUs'
     },
 ]
+onMounted(() => {
+    showtoast.onbind(toast.value)
+
+})
 function toPage(url: string) {
     console.log(url);
-    if (url != '') {
+    if (url.includes('/pages')) {
         uni.navigateTo({
             url: url
         })
+    } else if (url == 'update') {
+        showtoast.onSuccess('当前版本为最新版')
     }
 }
 function exitLogin() {

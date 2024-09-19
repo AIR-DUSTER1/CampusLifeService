@@ -49,7 +49,7 @@ let uid = uni.getStorageSync('uid')
 const toast = ref()
 const cell = reactive([
   {
-    name: 'order',
+    name: '/pages/OrderRecord/OrderRecord',
     title: '交易记录',
     icon: 'order'
   },

@@ -1,0 +1,34 @@
+<template>
+    <view>
+        <Navbar :bgColor="'#a6ffcb'">
+            <template #left>
+                <view>
+                    <u-icon name="arrow-left" size="20" color="#303133" @click="back"></u-icon>
+                </view>
+            </template>
+            <template #center>
+                <view>
+                    <text>校历</text>
+                </view>
+            </template>
+        </Navbar>
+        <!-- #ifdef APP -->
+        <u-gap height="20"></u-gap>
+        <!-- #endif -->
+        <view>
+
+        </view>
+    </view>
+</template>
+
+<script setup lang='ts'>
+import { ref, reactive, watch, onMounted } from 'vue'
+import Navbar from "@/components/layout/navbar/navbar.vue"
+function back() {
+    uni.navigateBack({
+        delta: 1
+    })
+}
+</script>
+
+<style lang='scss' scoped></style>

@@ -30,7 +30,6 @@
             <u-button shape="circle" type="primary" @click="submit" class="submit">提交</u-button>
         </view>
         <view v-else-if="current == '留言列表'">
-
             <u-swipe-action>
                 <template v-for="(item, index) in MessageList">
                     <u-swipe-action-item :options="options1" @click="deleteMessage" :index="index" :name="index">

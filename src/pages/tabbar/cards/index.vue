@@ -16,7 +16,7 @@
         </view>
         <view class="card-btn">
             <template v-for="(item, index) in BtnItem" :key="index">
-                <view class="btn-item" @click="routeto()">
+                <view class="btn-item" @click="routeto(item)">
                     <u-icon v-if="item.icon != ''" :name="item.icon" color="#34B5FA" size="24"></u-icon>
                     <view v-else style="height: 24px;" v-html="item.svg"></view>
                     <text class="btn-text">{{ item.title }}</text>
@@ -24,13 +24,16 @@
             </template>
         </view>
     </layout>
+    <u-toast ref="toast"></u-toast>
 </template>
 
 <script setup lang='ts'>
 import layout from "@/components/layout/index.vue"
 import { reactive, ref, onMounted } from "vue"
 import { settings } from "@/settings/settings"
+import showtoast from "@/utils/showtoast"
 let cardbg = ref(settings.cardBg)
+const toast = ref()
 let BtnItem = reactive([
     {
         icon: 'scan',
@@ -51,8 +54,37 @@ let BtnItem = reactive([
         title: '付款码'
     }
 ])
-function routeto() {
+onMounted(() => {
+    showtoast.onbind(toast.value)
 
+})
+function routeto(item) {
+    console.log(item)
+    if (item.title == '扫一扫') {
+        takephoto()
+    } else if (item.title == '充值') {
+        uni.navigateTo({
+            url: '/pages/recharge/recharge'
+        })
+    } else if (item.title == '卡余额') {
+
+    } else if (item.title == '付款码') {
+
+    }
+}
+function takephoto() {
+    uni.scanCode({
+        onlyFromCamera: false,
+        autoZoom: true,
+        success: function (res) {
+            console.log('条码类型：' + res.scanType);
+            console.log('条码内容：' + res.result);
+        },
+        fail: function (res) {
+            showtoast.onError(res.errMsg)
+            console.log(res.errMsg)
+        }
+    });
 }
 </script>
 
