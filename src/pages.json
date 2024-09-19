@@ -140,7 +140,28 @@
             "path": "pages/ComplaintsAndSuggestions/ComplaintsAndSuggestions",
             "style": {
                 "navigationStyle": "custom",
-                "navigationBarTitleText": "常见问题"
+                "navigationBarTitleText": "投诉和建议"
+            }
+        },
+        {
+            "path": "pages/OrderRecord/OrderRecord",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "交易记录"
+            }
+        },
+        {
+            "path": "pages/AboutUs/AboutUs",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "关于我们"
+            }
+        },
+        {
+            "path": "pages/MenuButton/MenuButton",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "菜单按钮"
             }
         }
     ],
