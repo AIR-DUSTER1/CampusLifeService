@@ -56,7 +56,6 @@ let BtnItem = reactive([
 ])
 onMounted(() => {
     showtoast.onbind(toast.value)
-
 })
 function routeto(item) {
     console.log(item)

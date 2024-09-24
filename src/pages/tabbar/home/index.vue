@@ -57,7 +57,7 @@
 
 <script setup lang="ts">
 import usePlatform from '@/store/platform'
-import { reactive, ref, onMounted } from "vue"
+import { reactive, ref, onMounted ,computed} from "vue"
 import { onLoad, onReady } from "@dcloudio/uni-app"
 import layout from "@/components/layout/index.vue"
 import Navbar from "@/components/layout/navbar/navbar.vue"
@@ -65,6 +65,10 @@ import banner from "@/components/banner/banner.vue"
 import request from '@/utils/request'
 import showtoast from "@/utils/showtoast"
 import { settings } from '@/settings/settings'
+import useUserStore from '@/store/user'
+const store = useUserStore()
+let userinfo = computed(() => store.userinfo)
+let uid = uni.getStorageSync('uid')
 interface newsList {
   createTime: string
   updateTime: string
@@ -141,6 +145,7 @@ let list = ref<newsList[]>([
 )
 onReady(() => {
   getNews()
+  getUserinfo()
 })
 onMounted(() => {
   if (platform == 'h5') {
@@ -163,7 +168,7 @@ function takephoto() {
       showtoast.onError(res.errMsg)
       console.log(res.errMsg)
     }
-  });
+  })
 }
 function routeto(url: string) {
   if (url.includes('/pages')) {
@@ -206,6 +211,21 @@ function toNews(item) {
   if (item.slug != undefined && item.slug != '' && item.slug != null) {
     uni.navigateTo({
       url: '/pages/article/article?slug=' + item.slug,
+    })
+  }
+}
+function getUserinfo() {
+  if (userinfo.value.phone == '') {
+    request({
+      url: `/user/${uid}`,
+    }).then((res) => {
+      if (res.success) {
+        store.saveUserInfo(res.data)
+      } else {
+        showtoast.onError(res.message)
+      }
+    }).catch((err) => {
+      showtoast.onError(err)
     })
   }
 }

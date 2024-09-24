@@ -191,6 +191,13 @@
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "请假"
             }
+        },
+        {
+            "path": "pages/SchoolCalendar/SchoolCalendar",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "校历"
+            }
         }
 
     ],

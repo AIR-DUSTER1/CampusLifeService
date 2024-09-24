@@ -88,7 +88,7 @@
             <u-button type="primary" class="btn" shape="circle" @click="submit">提交</u-button>
         </view>
         <view v-else-if="current == '我的申请'">
-            <u-swipe-action>
+            <u-swipe-action v-if="ApplyList.length > 0">
                 <template v-for="(item, index) in ApplyList" :key="index">
                     <u-swipe-action-item class="ApplyList-item" :options="options" @click="deleteMessage" :index="index" :name="index">
                         <u-cell isLink>
@@ -133,13 +133,17 @@
                             </template>
                             <template #value>
                                 <view>
-                                    <up-tag text="已生效" type="success"></up-tag>
+                                    <up-tag v-if="item.status === '已生效'" text="已生效" type="success"></up-tag>
+                                    <up-tag v-else-if="item.status === '已撤销'" text="已撤销" type="error"></up-tag>
+                                    <up-tag v-else-if="item.status === '审批中'" text="审批中"></up-tag>
+                                    <up-tag v-else text="拒绝" type="error"></up-tag>
                                 </view>
                             </template>
                         </u-cell>
                     </u-swipe-action-item>
                 </template>
             </u-swipe-action>
+            <u-empty style="height: 85vh;" text="暂无报修记录" mode="list" v-else></u-empty>
         </view>
     </view>
     <u-toast ref="toast"></u-toast>
@@ -220,56 +224,13 @@ const rule = {
     ],
 }
 const options = reactive([{
-    text: '删除',
+    text: '撤销',
     style: {
         backgroundColor: '#E53D30'
     }
 }])
 let ApplyList = ref<any>([
-    {
-        username: useinfo.value.username ? useinfo.value.username : '',
-        number: useinfo.value.number ? useinfo.value.number : '',
-        class: '231111111',
-        type: '当天事假',
-        leavingSchool: true,
-        returnDormitory: true,
-        notGoingToBed: true,
-        startDate: '2024-09-01 08:04',
-        endDate: '2024-09-02 08:04',
-    },
-    {
-        username: useinfo.value.username ? useinfo.value.username : '',
-        number: useinfo.value.number ? useinfo.value.number : '',
-        class: '231111111',
-        type: '当天事假',
-        leavingSchool: true,
-        returnDormitory: true,
-        notGoingToBed: true,
-        startDate: '2024-09-01 08:04',
-        endDate: '2024-09-02 08:04',
-    },
-    {
-        username: useinfo.value.username ? useinfo.value.username : '',
-        number: useinfo.value.number ? useinfo.value.number : '',
-        class: '231111111',
-        type: '当天事假',
-        leavingSchool: true,
-        returnDormitory: true,
-        notGoingToBed: true,
-        startDate: '2024-09-01 08:04',
-        endDate: '2024-09-02 08:04',
-    },
-    {
-        username: useinfo.value.username ? useinfo.value.username : '',
-        number: useinfo.value.number ? useinfo.value.number : '',
-        class: '231111111',
-        type: '当天事假',
-        leavingSchool: true,
-        returnDormitory: true,
-        notGoingToBed: true,
-        startDate: '2024-09-01 08:04',
-        endDate: '2024-09-02 08:04',
-    },
+
 ])
 const list = reactive([
     { name: '请假申请' },
@@ -285,7 +246,7 @@ const columnData = reactive([
 ]);
 onMounted(() => {
     showtoast.onbind(toast.value)
-    // #ifndef MP-WEIXIN
+    // #ifdef MP-WEIXIN
     formRef.value.setRules(rule)
     datetimePickerRef.value.setFormatter(formatter)
     datetimePickerRef1.value.setFormatter(formatter)
@@ -395,7 +356,7 @@ const changeHandler = (e) => {
     if (columnIndex === 0) {
         uPickerRef.value.setColumnValues(1, columnData[index]);
     }
-};
+}
 
 function formatTimestamp(timestamp: number): string {
     const date = new Date(timestamp)
