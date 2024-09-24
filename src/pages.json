@@ -163,7 +163,36 @@
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "菜单按钮"
             }
+        },
+        {
+            "path": "pages/CardBalance/CardBalance",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "卡余额"
+            }
+        },
+        {
+            "path": "pages/PaymentCode/PaymentCode",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "付款码"
+            }
+        },
+        {
+            "path": "pages/reportRepair/reportRepair",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "报修"
+            }
+        },
+        {
+            "path": "pages/LeaveApplication/LeaveApplication",
+            "style": {
+                "navigationStyle": "custom",
+                "navigationBarTitleText": "请假"
+            }
         }
+
     ],
     "tabBar": {
         "color": "#7A7E83",
@@ -194,6 +223,9 @@
     "easycom": {
         "autoscan": true,
         "custom": {
+            "^u--(.*)": "uview-plus/components/u-$1/u-$1.vue",
+		    "^up-(.*)": "uview-plus/components/u-$1/u-$1.vue",
+		    "^u-([^-].*)": "uview-plus/components/u-$1/u-$1.vue",
             "^u-(.*)": "uview-plus/components/u-$1/u-$1.vue"
         }
     },

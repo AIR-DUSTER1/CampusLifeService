@@ -67,9 +67,13 @@ function routeto(item) {
             url: '/pages/recharge/recharge'
         })
     } else if (item.title == '卡余额') {
-
+        uni.navigateTo({
+            url: '/pages/CardBalance/CardBalance'
+        })
     } else if (item.title == '付款码') {
-
+        uni.navigateTo({
+            url: '/pages/PaymentCode/PaymentCode'
+        })
     }
 }
 function takephoto() {

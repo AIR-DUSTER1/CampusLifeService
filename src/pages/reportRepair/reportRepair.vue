@@ -8,7 +8,7 @@
             </template>
             <template #center>
                 <view>
-                    <text>校历</text>
+                    <text>报修</text>
                 </view>
             </template>
         </Navbar>
@@ -16,7 +16,14 @@
         <u-gap height="20"></u-gap>
         <!-- #endif -->
         <view>
-
+            <u-form :model="form" :rules="rules" ref="form">
+                <u-form-item label="标题" prop="title">
+                    <u-input v-model="form" placeholder="请输入标题"></u-input>
+                </u-form-item>
+                <u-form-item label="内容" prop="content">
+                    <u-input v-model="form" placeholder="请输入内容"></u-input>
+                </u-form-item>
+            </u-form>
         </view>
     </view>
     <u-toast ref="toast"></u-toast>
@@ -27,15 +34,18 @@ import { ref, reactive, watch, onMounted } from 'vue'
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import showtoast from "@/utils/showtoast"
 import request from '@/utils/request'
-const toast = ref()
-let img = ref()
+const toast = ref<any>()
+let form = ref({
+
+})
+const rules = [
+    {
+
+    }
+]
 onMounted(() => {
     showtoast.onbind(toast.value)
-    getSchoolCalendar()
 })
-function getSchoolCalendar() {
-
-}
 function back() {
     uni.navigateBack({
         delta: 1

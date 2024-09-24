@@ -31,7 +31,7 @@
         </view>
         <view v-else-if="current == '留言列表'">
             <u-swipe-action>
-                <template v-for="(item, index) in MessageList">
+                <template v-for="(item, index) in MessageList" :key="index">
                     <u-swipe-action-item :options="options1" @click="deleteMessage" :index="index" :name="index">
                         <u-cell isLink @click="toMessage(item)">
                             <template #title>
