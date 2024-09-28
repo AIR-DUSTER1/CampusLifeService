@@ -66,7 +66,9 @@ import request from '@/utils/request'
 import showtoast from "@/utils/showtoast"
 import { settings } from '@/settings/settings'
 import useUserStore from '@/store/user'
+import useCard from '@/store/card'
 const store = useUserStore()
+const card = useCard()
 let userinfo = computed(() => store.userinfo)
 let uid = uni.getStorageSync('uid')
 interface newsList {
@@ -113,7 +115,7 @@ let BtnItem = reactive([
     id: 3,
     svg: '<svg t="1726378940889" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="10715" width="40" height="40"><path d="M512 512m-512 0a512 512 0 1 0 1024 0 512 512 0 1 0-1024 0Z" fill="#9BD6FF" p-id="10716"></path><path d="M512 512m-460.8 0a460.8 460.8 0 1 0 921.6 0 460.8 460.8 0 1 0-921.6 0Z" fill="#2F86FF" p-id="10717"></path><path d="M448 537.6a46.08 46.08 0 0 1 46.08 46.08v102.4A46.08 46.08 0 0 1 448 732.16H345.6a46.08 46.08 0 0 1-46.08-46.08v-102.4A46.08 46.08 0 0 1 345.6 537.6z m102.4 76.8a20.48 20.48 0 0 1 20.3264 17.92l0.1536 2.56v76.8a20.48 20.48 0 0 1-40.8064 2.56l-0.1536-2.56v-76.8a20.48 20.48 0 0 1 20.48-20.48z m153.6 0a20.48 20.48 0 0 1 20.3264 17.92l0.1536 2.56v76.8a20.48 20.48 0 0 1-40.8064 2.56l-0.1536-2.56v-76.8a20.48 20.48 0 0 1 20.48-20.48z m-76.8 0a20.48 20.48 0 0 1 20.3264 17.92l0.1536 2.56v76.8a20.48 20.48 0 0 1-40.8064 2.56l-0.1536-2.56v-76.8a20.48 20.48 0 0 1 20.48-20.48z m-179.2-35.84H345.6a5.12 5.12 0 0 0-5.12 5.12v102.4c0 2.816 2.304 5.12 5.12 5.12h102.4a5.12 5.12 0 0 0 5.12-5.12v-102.4a5.12 5.12 0 0 0-5.12-5.12z m102.4-40.96a20.48 20.48 0 0 1 20.3264 17.92l0.1536 2.56v25.6a20.48 20.48 0 0 1-40.8064 2.56l-0.1536-2.56v-25.6a20.48 20.48 0 0 1 20.48-20.48z m153.6 0a20.48 20.48 0 0 1 20.3264 17.92l0.1536 2.56v25.6a20.48 20.48 0 0 1-40.8064 2.56l-0.1536-2.56v-25.6a20.48 20.48 0 0 1 20.48-20.48z m-76.8 0a20.48 20.48 0 0 1 20.3264 17.92l0.1536 2.56v25.6a20.48 20.48 0 0 1-40.8064 2.56l-0.1536-2.56v-25.6a20.48 20.48 0 0 1 20.48-20.48zM448 286.72A46.08 46.08 0 0 1 494.08 332.8v102.4A46.08 46.08 0 0 1 448 481.28H345.6A46.08 46.08 0 0 1 299.52 435.2V332.8A46.08 46.08 0 0 1 345.6 286.72z m230.4 0A46.08 46.08 0 0 1 724.48 332.8v102.4A46.08 46.08 0 0 1 678.4 481.28h-102.4A46.08 46.08 0 0 1 529.92 435.2V332.8A46.08 46.08 0 0 1 576 286.72zM448 327.68H345.6a5.12 5.12 0 0 0-5.12 5.12v102.4c0 2.816 2.304 5.12 5.12 5.12h102.4a5.12 5.12 0 0 0 5.12-5.12V332.8a5.12 5.12 0 0 0-5.12-5.12z m230.4 0h-102.4a5.12 5.12 0 0 0-5.12 5.12v102.4c0 2.816 2.304 5.12 5.12 5.12h102.4a5.12 5.12 0 0 0 5.12-5.12V332.8a5.12 5.12 0 0 0-5.12-5.12z" fill="#FFFFFF" p-id="10718"></path><path d="M396.8 384m-25.6 0a25.6 25.6 0 1 0 51.2 0 25.6 25.6 0 1 0-51.2 0Z" fill="#FFFFFF" p-id="10719"></path><path d="M396.8 640m-25.6 0a25.6 25.6 0 1 0 51.2 0 25.6 25.6 0 1 0-51.2 0Z" fill="#FFFFFF" p-id="10720"></path><path d="M627.2 384m-25.6 0a25.6 25.6 0 1 0 51.2 0 25.6 25.6 0 1 0-51.2 0Z" fill="#FFFFFF" p-id="10721"></path></svg>',
     text: '付款码',
-    url: "/pages/facialAuthentication/facialAuthentication"
+    url: "/pages/PaymentCode/PaymentCode"
   },
   {
     id: 4,
@@ -146,6 +148,7 @@ let list = ref<newsList[]>([
 onReady(() => {
   getNews()
   getUserinfo()
+  getCardInfo()
 })
 onMounted(() => {
   if (platform == 'h5') {
@@ -163,6 +166,14 @@ function takephoto() {
     success: function (res) {
       console.log('条码类型：' + res.scanType);
       console.log('条码内容：' + res.result);
+      request({
+        url:'/card/pay/scan',
+        method:'post',
+        data:{
+          cardNo:'',
+          orderNo:''
+        }
+    })
     },
     fail: function (res) {
       showtoast.onError(res.errMsg)
@@ -228,6 +239,20 @@ function getUserinfo() {
       showtoast.onError(err)
     })
   }
+}
+function getCardInfo(){
+    request({
+        url:'/card/current',
+}).then((res) => {
+    if (res.success) {
+      card.setCardInfo(res.data)
+    }else{
+        showtoast.onError(res.message)
+    }
+    console.log(res.data)
+}).catch((err) => {
+    showtoast.onError(err)
+})
 }
 </script>
 

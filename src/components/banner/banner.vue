@@ -1,5 +1,5 @@
 <template>
-    <u-swiper v-if="props.bannerImg.length > 0" :list="list" :autoplay="true" circular interval="2000" height="260rpx">
+    <u-swiper v-if="list.length > 0" :list="list" :autoplay="true" circular interval="2000" height="260rpx">
     </u-swiper>
 </template>
 

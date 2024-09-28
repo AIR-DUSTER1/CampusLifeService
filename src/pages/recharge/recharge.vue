@@ -12,6 +12,9 @@
                 </view>
             </template>
         </Navbar>
+        <!-- #ifdef APP -->
+        <u-gap height="20"></u-gap>
+        <!-- #endif -->
         <view class="recharge-number" v-if="charge">
             <u-input class="recharge-number-input" v-model="number" placeholder="请输入卡号" type="number"
                 :maxlength="'6'"></u-input>
@@ -28,7 +31,7 @@
             <view>
                 <u-cell>
                     <template #title>
-                        余额：{{ 100 }}
+                        余额：{{ balance }}
                     </template>
                 </u-cell>
             </view>
@@ -52,15 +55,22 @@
             </view>
         </view>
         <u-toast ref="toast"></u-toast>
+        <view v-html="payAddress"></view>
     </view>
 </template>
 
 <script setup lang='ts'>
 import { onMounted, ref, toRaw, reactive, shallowRef, watch, onUnmounted } from 'vue'
 import Navbar from "@/components/layout/navbar/navbar.vue"
+import request from '@/utils/request'
+import showtoast from '@/utils/showtoast'
 let number = ref()
 let rechargeAmount = ref()
 let charge = ref(true)
+let balance = ref()
+let pay = ref(false)
+let payAddress = ref()
+const toast = ref()
 const tagMoneny = reactive([
     {
         money: 20,
@@ -75,11 +85,62 @@ const tagMoneny = reactive([
         money: 200,
     },
 ])
+onMounted(() => {
+    showtoast.onbind(toast.value)
+})
 function query() {
-    charge.value = false
+    request({
+        url: `/card/${number.value}/balance`,
+    }).then((res) => {
+        if (res.success) {
+            balance.value = res.data
+            charge.value = false
+        } else {
+            showtoast.onError(res.message)
+        }
+    }).catch((err) => {
+        showtoast.onError(err)
+    })
 }
 function recharge() {
-
+    if (rechargeAmount.value == '' || rechargeAmount.value == null || rechargeAmount.value == undefined) {
+        showtoast.onError('请输入充值金额')
+    } else {
+        request({
+            url: '/card/alipay/to/alipay',
+            data: {
+                totalAmount: rechargeAmount.value
+            }
+        }).then((res:any) => {
+            console.log(res)
+            // payAddress.value 
+            let EnvUtils = plus.android.importClass("com.alipay.sdk.app.EnvUtils");    
+            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+            let orderInfo = res.body;  //从服务器获取的订单
+            //获取支付宝支付对象
+            let alipaySev:any = null;  // 支付宝支付对象
+            plus.payment.getChannels(function (channels) {
+                for (var i in channels) {
+                    var channel = channels[i];
+                    if (channel.id === 'alipay') {
+                        alipaySev = channel;
+                    }
+                }
+                //发起支付
+                plus.payment.request(alipaySev, orderInfo, function (result) {
+                    var rawdata = JSON.parse(result.rawdata as string);
+                    console.log(rawdata);
+                    console.log("支付成功");
+                }, function (e) {
+                    console.log("支付失败：" + JSON.stringify(e));
+                });
+            }, function (e) {
+                console.log("获取支付渠道失败：" + JSON.stringify(e));
+            });
+        }).catch((err) => {
+            // showtoast.onError(err)
+        })
+    }
 }
 function amountOfMoney(item) {
     rechargeAmount.value = item

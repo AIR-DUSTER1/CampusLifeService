@@ -51,7 +51,18 @@ onMounted(() => {
     getBalance()
 })
 function getBalance() {
-
+    request({
+        url: `/card/${form.value.cardNo}/balance`,
+        method: 'POST',
+    }).then(res => {
+        if (res.code === 200) {
+            form.value.cardBalance = res.data as number
+        } else {
+            showtoast.onError(res.message)
+        }
+    }).catch((err) => {
+        showtoast.onError(err)
+    })
 }
 function torecharge() {
     uni.navigateTo({

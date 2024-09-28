@@ -198,8 +198,26 @@
                 "navigationStyle": "custom",
                 "navigationBarTitleText": "校历"
             }
-        }
-
+        },
+        {
+            "path": "pages/popup/popup",
+            "style": {
+                "navigationStyle": "custom",
+                "backgroundColor": "transparent",
+                "app-plus": {
+                    "animationType": "fade-in",
+                    "background": "transparent",
+                    "popGesture": "none"
+                }
+            }
+},
+{
+    "path": "pages/message/message",
+    "style": {
+        "navigationStyle": "custom",
+        "navigationBarTitleText": "通知消息"
+    }
+}
     ],
     "tabBar": {
         "color": "#7A7E83",

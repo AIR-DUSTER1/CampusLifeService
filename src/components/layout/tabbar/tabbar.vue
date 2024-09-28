@@ -1,7 +1,7 @@
 <template>
     <u-tabbar :value="active" :fixed="true" :placeholder="true" :safeAreaInsetBottom="true" class="tabbar">
         <u-tabbar-item :text="item.text" :icon="fillicon(item)" @click="click(item)" v-for="item in list"
-            :dot="item.badge != 0 ? true : false" :key="item.id" :name="item.name"></u-tabbar-item>
+             :badge="item.badge" :key="item.id" :name="item.name"></u-tabbar-item>
     </u-tabbar>
 
 </template>
@@ -9,8 +9,9 @@
 <script setup lang='ts'>
 import usetabbar from "@/store/tabbar"
 import { ref, reactive, onMounted, computed } from 'vue'
-import { onLaunch, onShow, onHide } from "@dcloudio/uni-app"
-let badge = ref(1000)
+import { onLaunch, onShow, onHide, onLoad } from "@dcloudio/uni-app"
+import request from "@/utils/request";
+let badge = ref()
 let active = ref()
 const tabbar = usetabbar()
 let name = computed(() => tabbar.getActive)
@@ -42,7 +43,7 @@ let list = reactive([
         name: "bell",
         selectedIconPath: "bell-fill",
         pagePath: "/pages/tabbar/messages/index",
-        badge: badge.value
+        badge: computed(()=>badge.value)
     },
     {
         id: 3,
@@ -54,6 +55,9 @@ let list = reactive([
         badge: 0
     }
 ])
+onLoad(() => {
+    getbadge()
+})
 onShow(() => {
     setCurrent(route)
     active.value = name.value
@@ -84,6 +88,19 @@ function setCurrent(route: string | undefined) {
     } else if (route == 'pages/tabbar/my/index') {
         tabbar.setActive('account')
     }
+}
+function getbadge() {
+    request({
+        url:'/system/notice/unread',
+    }).then((res) => {
+        if (res.success) {
+            badge.value = res.data as number
+        }else{
+            console.log(res.message);
+        }
+    }).catch((err) => {
+        console.log(err)
+    })
 }
 </script>
 

@@ -7,11 +7,11 @@
                     一卡通：
                 </view>
                 <view class="card-subtitle">
-                    学号/工号：
+                    学号/工号：{{ userinfo.number }}
                 </view>
             </view>
             <view class="card-number">
-                卡号：
+                卡号：{{ cardInfo.carNo }}
             </view>
         </view>
         <view class="card-btn">
@@ -29,10 +29,18 @@
 
 <script setup lang='ts'>
 import layout from "@/components/layout/index.vue"
-import { reactive, ref, onMounted } from "vue"
+import { reactive, ref, onMounted, computed } from "vue"
 import { settings } from "@/settings/settings"
 import showtoast from "@/utils/showtoast"
+import request from "@/utils/request";
+import { onLoad } from "@dcloudio/uni-app"
+import useCard from '@/store/card'
+import useUserStore from '@/store/user'
+const store = useUserStore()
+let userinfo = computed(() => store.userinfo)
+const card = useCard()
 let cardbg = ref(settings.cardBg)
+let cardInfo = computed(() => card.cardinfo)
 const toast = ref()
 let BtnItem = reactive([
     {
@@ -54,8 +62,11 @@ let BtnItem = reactive([
         title: '付款码'
     }
 ])
+onLoad(() => {
+})
 onMounted(() => {
     showtoast.onbind(toast.value)
+    
 })
 function routeto(item) {
     console.log(item)
@@ -87,8 +98,9 @@ function takephoto() {
             showtoast.onError(res.errMsg)
             console.log(res.errMsg)
         }
-    });
+    })
 }
+
 </script>
 
 <style lang='scss' scoped>
@@ -108,7 +120,7 @@ function takephoto() {
         background-image: url('@/static/images/card.png');
         background-repeat: no-repeat;
         background-size: cover;
-        color: #0080ff;
+        color: #a343df;
 
         .card-title {
             font-size: 40rpx;
@@ -120,6 +132,7 @@ function takephoto() {
 
         .card-number {
             text-align: end;
+            font-size: 40rpx;
         }
     }
 

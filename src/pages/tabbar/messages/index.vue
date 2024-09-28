@@ -18,15 +18,12 @@
                 <u-list-item>
                     <u-cell v-for="item in messageList" isLink @click="toMessage(item)">
                         <template #title>
-                            <!-- <view class="img">
-                                <u-image :src="item.cover" width="100rpx" height="100rpx" lazyLoad />
-                            </view> -->
-                        </template>
-                        <template #value>
-                            <!-- <view class="text u-flex u-flex-direction-column">
+                            <view class="text u-flex u-flex-direction-column">
                                 <text class="title">{{ item.title }}</text>
-                                <text class="describe">{{ item.description }}</text>
-                            </view> -->
+                            </view>
+                        </template>
+                        <template #label>
+                            <text class="describe">{{ item.content }}</text>
                         </template>
                     </u-cell>
                 </u-list-item>
@@ -47,15 +44,17 @@ import request from '@/utils/request'
 import showtoast from "@/utils/showtoast"
 let upEmpty = ref(true)
 let toast = ref()
+let currentPage = ref(1)
 interface message {
     title: string,
     content: string
 }
-let messageList = reactive<message[]>([
+let messageList = ref<message[]>([
 
 ])
 onLoad(() => {
     showtoast.onbind(toast.value)
+    getList()
     loadmore()
     empty()
 })
@@ -71,19 +70,34 @@ const loadmore = () => {
 
 }
 function getList() {
-
+    request({
+        url:'/system/notice/page',
+        data:{
+            page:currentPage.value,
+            pageSize:10
+        }
+    }).then((res:any) => {
+        if (res.success) {
+            messageList.value = res.data.records
+            console.log(res.data);
+        } else {
+            showtoast.onError(res.message)
+        }
+    }).catch((err) => {
+        showtoast.onError(err)
+    })
 }
 function empty() {
-    if (messageList.length == 0) {
+    if (messageList.value.length == 0) {
         upEmpty.value = true
-    } else if (messageList.length > 0) {
+    } else if (messageList.value.length > 0) {
         upEmpty.value = false
     }
 }
 function toMessage(item) {
-    // uni.navigateTo({
-    //     url: '/pages/message/message?id=' + item.id
-    // })
+    uni.navigateTo({
+        url: '/pages/message/message?nid=' + item.nid
+    })
 }
 </script>
 
@@ -93,11 +107,19 @@ function toMessage(item) {
     height: calc(100vh - 103rpx);
 
     .list {
+        height: calc(100vh - 190rpx) !important;
         background-color: $moduleBackgroundColor;
     }
 
     .empty {
         height: calc(100vh - 200rpx);
     }
+}
+.title{
+    font-size: 40rpx;
+}
+.describe{
+    margin-top: 10rpx;
+    color: $subtitle;
 }
 </style>

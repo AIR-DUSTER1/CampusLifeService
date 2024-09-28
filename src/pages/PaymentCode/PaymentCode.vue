@@ -16,7 +16,7 @@
         <u-gap height="20"></u-gap>
         <!-- #endif -->
         <view class="payment-code">
-            <u-image width="200px" height="200px" class="img" @click=""></u-image>
+            <u-image :src="payimg" width="200px" height="200px" class="img" @click="reload"></u-image>
             <view>{{ setTime }}秒后自动刷新</view>
         </view>
     </view>
@@ -27,20 +27,39 @@
 import { ref, reactive, watch, onMounted } from 'vue'
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import showtoast from "@/utils/showtoast"
+import useCard from '@/store/card'
 import request from '@/utils/request'
+const store = useCard()
 const toast = ref<any>()
+let payimg = ref('')
 let setTime = ref(60)
 onMounted(() => {
     showtoast.onbind(toast.value)
-    setTimer()
+    setTimer(false)
+    getCode()
 })
 function getCode() {
-
+    request({
+            url:`/card/${100000}/payCode`,
+            method:'post'
+        }).then((res) => {
+            if (res.success) {
+                payimg.value = res.data as string
+            }else{
+                showtoast.onError(res.message)
+            }
+        }).catch((err) => {
+            showtoast.onError(err)
+        })
 }
-function setTimer() {
+function reload(){
+    setTime.value =0
+}
+function setTimer(clear) {
     setInterval(() => {
         setTime.value--
         if (setTime.value <= 0) {
+            getCode()
             setTime.value = 60
         }
     }, 1000)

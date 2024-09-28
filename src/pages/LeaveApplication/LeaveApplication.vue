@@ -20,8 +20,8 @@
         </view>
         <view v-if="current == '请假申请'" class="form">
             <u-form ref="formRef" :model="form" :rule="rule">
-                <u-form-item label="姓名" prop="title" labelWidth="80" required>
-                    <u-input v-model="form.title" type="text" placeholder="请输入姓名" border="bottom" clearable></u-input>
+                <u-form-item label="姓名" prop="username" labelWidth="80" required>
+                    <u-input v-model="form.username" type="text" placeholder="请输入姓名" border="bottom" clearable></u-input>
                 </u-form-item>
                 <u-form-item label="请假类型" prop="type" labelWidth="80" required
                     @click="typeDisabled = true; showType = true">
@@ -90,7 +90,7 @@
         <view v-else-if="current == '我的申请'">
             <u-swipe-action v-if="ApplyList.length > 0">
                 <template v-for="(item, index) in ApplyList" :key="index">
-                    <u-swipe-action-item class="ApplyList-item" :options="options" @click="deleteMessage" :index="index" :name="index">
+                    <u-swipe-action-item class="ApplyList-item" :options="options" :disabled="item.status !='审批中'" @click="deleteMessage" :index="index" :name="index">
                         <u-cell isLink>
                             <template #title>
                                 <view class="ApplyList-title">
@@ -169,6 +169,7 @@ const uPickerRef = ref()
 const formRef = ref()
 let startvalue = ref(Date.now())
 let endvalue = ref(Date.now())
+let currentPage = ref(1)
 const datetimePickerRef = ref()
 const datetimePickerRef1 = ref()
 const radiolist1 = ref([
@@ -177,7 +178,7 @@ const radiolist1 = ref([
 ])
 let current = ref('请假申请')
 let form = ref({
-    title: useinfo.value.username ? useinfo.value.username : '',
+    username: useinfo.value.username ? useinfo.value.username : '',
     type: '',
     leavingSchool: false,
     returnDormitory: false,
@@ -188,7 +189,7 @@ let form = ref({
     file: ''
 })
 const rule = {
-    title: [
+    username: [
         {
             required: true,
             message: '请输入标题',
@@ -230,7 +231,17 @@ const options = reactive([{
     }
 }])
 let ApplyList = ref<any>([
-
+{
+    title: useinfo.value.username ? useinfo.value.username : '',
+    type: '123',
+    number:useinfo.value.phone?useinfo.value.phone:'',
+    leavingSchool: false,
+    returnDormitory: false,
+    notGoingToBed: false,
+    startDate: '2021-05-01',
+    endDate: '2021-05-01',
+    status:'审批中'
+}
 ])
 const list = reactive([
     { name: '请假申请' },
@@ -246,6 +257,7 @@ const columnData = reactive([
 ]);
 onMounted(() => {
     showtoast.onbind(toast.value)
+    getApply()
     // #ifdef MP-WEIXIN
     formRef.value.setRules(rule)
     datetimePickerRef.value.setFormatter(formatter)
@@ -376,14 +388,68 @@ function leavinggroupChange(item) {
     }
 }
 function submit() {
+    if (form.value.username == '') {
+        showtoast.onError('请输入姓名')
+    } else if (form.value.type == '') {
+        showtoast.onError('请输入请假类型')
+    }else if (form.value.startDate == '') {
+        showtoast.onError('请输入开始时间')
+    }else if (form.value.endDate == '') {
+        showtoast.onError('请输入结束时间')
+    }else{
+        request({
+        url:'/life/leave',
+        method:'post',
+        data:{
+            username:form.value.username,
+            type:form.value.type,
+            start:form.value.startDate,
+            end:form.value.endDate,
+            leavingSchool:form.value.leavingSchool,
+            returnDormitory:form.value.returnDormitory,
+            notGoingToBed:form.value.notGoingToBed,
+            reason:form.value.reason,
+            file:form.value.file
+        }
+    }).then(res=>{
+        if(res.success){
+            showtoast.onSuccess('提交成功')
+            
+            setTimeout(() => {
+                back()
+            }, 1000)
+        }else{
 
-    showtoast.onSuccess('提交成功')
+        }
+    }).catch((err) => {
+
+    })
+    }
 }
-function deleteMessage() {
-
+function deleteMessage(index) {
+    console.log(index)
+    
+    // request({
+    //     url:`/life/leave/${lids}/revoke`
+    // })
 }
 function getApply() {
-
+    request({
+        url:'/life/leave/page',
+        data:{
+            username:useinfo.value.username ? useinfo.value.username : '',
+            pageSize:10,
+            page:currentPage.value
+        }
+    }).then((res:any) => {
+        if (res.success) {
+            ApplyList.value = res.data.records
+        } else {
+            showtoast.onError(res.message)
+        }
+    }).catch((err) => {
+        showtoast.onError(err)
+    })
 }
 function change(item) {
     console.log(item);
@@ -400,9 +466,8 @@ function back() {
 </script>
 
 <style lang='scss' scoped>
-.LeaveApplication{
+body{
     background-color: $page-bg;
-    height: auto;
 }
 .u-tabs-box {
     display: flex;
