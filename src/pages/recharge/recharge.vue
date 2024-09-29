@@ -64,11 +64,11 @@ import { onMounted, ref, toRaw, reactive, shallowRef, watch, onUnmounted } from 
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import request from '@/utils/request'
 import showtoast from '@/utils/showtoast'
+import { onLoad } from '@dcloudio/uni-app';
 let number = ref()
 let rechargeAmount = ref()
 let charge = ref(true)
 let balance = ref()
-let pay = ref(false)
 let payAddress = ref()
 const toast = ref()
 const tagMoneny = reactive([
@@ -85,6 +85,10 @@ const tagMoneny = reactive([
         money: 200,
     },
 ])
+onLoad((query:any) => {
+    number.value = query.cardNo ? query.cardNo : ''
+    
+})
 onMounted(() => {
     showtoast.onbind(toast.value)
 })
@@ -107,9 +111,10 @@ function recharge() {
         showtoast.onError('请输入充值金额')
     } else {
         request({
-            url: '/card/alipay/to/alipay',
+            url: '/card/alipay/apppay',
             data: {
-                totalAmount: rechargeAmount.value
+                totalAmount: rechargeAmount.value,
+                cardNo: number.value
             }
         }).then((res:any) => {
             console.log(res)
@@ -130,8 +135,11 @@ function recharge() {
                 plus.payment.request(alipaySev, orderInfo, function (result) {
                     var rawdata = JSON.parse(result.rawdata as string);
                     console.log(rawdata);
+                    showtoast.onSuccess('支付成功')
                     console.log("支付成功");
+                    query()
                 }, function (e) {
+                    showtoast.onError(e.message)
                     console.log("支付失败：" + JSON.stringify(e));
                 });
             }, function (e) {

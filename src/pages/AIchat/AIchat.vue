@@ -68,8 +68,8 @@ watch(selectitem,(value)=>{
     console.log(websrc.value)
     
 })
+// #ifndef H5
 onShow(() => {
-    // #ifndef H5
     uni.onKeyboardHeightChange((obj) => {
         // 获取系统信息
         console.log(obj);
@@ -78,12 +78,11 @@ onShow(() => {
         let _diff = obj.height - _heightDiff
         // 键盘高度
         keyheight = (_diff > 0 ? _diff : 0) - 2 + "px";
-        // #endif
-        // showToast(uToastRef.value, , keyheight)
     })
 })
+// #endif
+
 function openSelect() {
-    // selectlist.value = !selectlist.value
     uni.navigateTo({
 		url: '/pages/popup/popup'
 	})

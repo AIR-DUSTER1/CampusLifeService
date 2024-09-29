@@ -39,8 +39,8 @@
       <div class="login-type">
         <u-text style="width: 40%;" type="primary" :show="currentLoginType != loginType.email" text="邮箱登录"
           @click="loginEmail"></u-text>
-        <u-text type="primary" :show="currentLoginType != loginType.phone" text="手机号登录" @click="loginPhone"></u-text>
-        <u-text type="primary" :show="currentLoginType != loginType.password" text="密码登录"
+        <u-text  type="primary" :show="currentLoginType != loginType.phone" text="手机号登录" @click="loginPhone"></u-text>
+        <u-text  type="primary" :show="currentLoginType != loginType.password" text="密码登录"
           @click="loginPassword"></u-text>
       </div>
       <u-button v-if="currentLoginType != loginType.password" type="primary" formType shape="circle" @click="submit"
@@ -356,7 +356,7 @@ body {
 
   .login-type {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
     margin: 20rpx 0 30rpx 0;
 
     :deep(.u-text) {

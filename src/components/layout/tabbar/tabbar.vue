@@ -10,8 +10,9 @@
 import usetabbar from "@/store/tabbar"
 import { ref, reactive, onMounted, computed } from 'vue'
 import { onLaunch, onShow, onHide, onLoad } from "@dcloudio/uni-app"
-import request from "@/utils/request";
-let badge = ref()
+import request from "@/utils/request"
+
+let badge = computed(() => tabbar.getBadge)
 let active = ref()
 const tabbar = usetabbar()
 let name = computed(() => tabbar.getActive)
@@ -94,7 +95,7 @@ function getbadge() {
         url:'/system/notice/unread',
     }).then((res) => {
         if (res.success) {
-            badge.value = res.data as number
+            tabbar.setBadge(res.data as number)
         }else{
             console.log(res.message);
         }

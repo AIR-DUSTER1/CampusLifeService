@@ -78,7 +78,7 @@ function exitLogin() {
                 uni.removeStorageSync('token')
                 uni.removeStorageSync('uid')
                 uni.clearStorageSync()
-                uni.navigateTo({
+                uni.reLaunch({
                     url: '/pages/login/login'
                 })
             } else if (cancel) {

@@ -18,10 +18,10 @@
         <view class="form">
             <u-form labelPosition="left" :model="form">
                 <u-form-item label="卡号" borderBottom labelWidth="60">
-                    <u-input v-model="form.cardNo" type="number" border="bottom" clearable></u-input>
+                    <u-input v-model="form.cardNo" maxlength="6" type="number" border="bottom" clearable></u-input>
                 </u-form-item>
                 <u-form-item label="卡余额" borderBottom labelWidth="60">
-                    <u-input v-model="form.cardBalance" disabled disabledColor="#ffffff" border="none"></u-input>
+                    <u-input class="card-balance" v-model="form.cardBalance" disabled disabledColor="#ffffff" border="none"></u-input>
                 </u-form-item>
             </u-form>
         </view>
@@ -48,14 +48,15 @@ let form = ref({
 })
 onMounted(() => {
     showtoast.onbind(toast.value)
-    getBalance()
+    if (form.value.cardNo !='') {
+        getBalance()
+    }
 })
 function getBalance() {
     request({
         url: `/card/${form.value.cardNo}/balance`,
-        method: 'POST',
     }).then(res => {
-        if (res.code === 200) {
+        if (res.success) {
             form.value.cardBalance = res.data as number
         } else {
             showtoast.onError(res.message)
@@ -66,7 +67,7 @@ function getBalance() {
 }
 function torecharge() {
     uni.navigateTo({
-        url: '/pages/recharge/recharge'
+        url: '/pages/recharge/recharge?cardNo=' + form.value.cardNo 
     })
 }
 function back() {
@@ -79,6 +80,9 @@ function back() {
 <style lang='scss' scoped>
 .form {
     padding: 40rpx;
+    .card-balance{
+        margin-left: 30rpx;
+    }
 }
 
 .btn-box {

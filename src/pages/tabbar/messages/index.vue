@@ -10,7 +10,8 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        
+        <!-- #ifdef APP || MP -->
         <u-gap height="20"></u-gap>
         <!-- #endif -->
         <view class="Message-list" v-if="!upEmpty">

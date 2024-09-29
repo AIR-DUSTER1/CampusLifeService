@@ -199,17 +199,19 @@
                 "navigationBarTitleText": "校历"
             }
         },
-        {
-            "path": "pages/popup/popup",
-            "style": {
-                "navigationStyle": "custom",
-                "backgroundColor": "transparent",
-                "app-plus": {
-                    "animationType": "fade-in",
-                    "background": "transparent",
-                    "popGesture": "none"
-                }
-            }
+		// #ifdef APP 
+		{
+		    "path": "pages/popup/popup",
+		    "style": {
+		        "navigationStyle": "custom",
+		        "backgroundColor": "transparent",
+		        "app-plus": {
+		            "animationType": "fade-in",
+		            "background": "transparent",
+		            "popGesture": "none"
+		        }
+		    }
+		// #endif 
 },
 {
     "path": "pages/message/message",

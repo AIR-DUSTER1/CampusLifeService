@@ -82,13 +82,14 @@ function getNews() {
     })
 }
 function scrolltolower() {
+    console.log(1);
+    
     if (toEnd.value) {
         status.value = 'nomore'
     } else {
         currentPage.value += 1
         uni.$u.debounce(getNews, 200, false)
     }
-
 }
 function toArticle(item) {
     if (item.slug != undefined && item.slug != '' && item.slug != null) {

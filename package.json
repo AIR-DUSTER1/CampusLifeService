@@ -48,8 +48,6 @@
     "@dcloudio/uni-mp-toutiao": "3.0.0-alpha-3061720230111001",
     "@dcloudio/uni-mp-weixin": "3.0.0-alpha-3061720230111001",
     "@dcloudio/uni-quickapp-webview": "3.0.0-alpha-3061720230111001",
-    "@microsoft/fetch-event-source": "^2.0.1",
-    "abortcontroller-polyfill": "^1.7.5",
     "pinia": "^2.0.36",
     "uview-plus": "^3.3.5",
     "vue": "^3.2.45",

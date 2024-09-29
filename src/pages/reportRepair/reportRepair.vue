@@ -50,7 +50,7 @@
         <view v-else-if="currentTabs == '我的申请'">
             <u-swipe-action v-if="reportList.length > 0">
                 <template v-for="(item, index) in reportList" :key="index">
-                    <u-swipe-action-item class="reportList-item" :options="options" :disabled="item.status =='已提交'" @click="deleteMessage" :index="index" :name="index">
+                    <u-swipe-action-item class="reportList-item" :options="options" disabled @click="deleteMessage" :index="index" :name="index">
                         <u-cell isLink>
                             <template #title>
                                 <view class="reportList-title">
@@ -217,6 +217,7 @@ let reportList =ref([
 ])
 onMounted(() => {
     showtoast.onbind(toast.value)
+    getReportList()
     // #ifdef MP-WEIXIN
     reportForm.value.setRules(rules)
     // #endif

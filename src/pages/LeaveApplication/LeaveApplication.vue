@@ -90,7 +90,7 @@
         <view v-else-if="current == '我的申请'">
             <u-swipe-action v-if="ApplyList.length > 0">
                 <template v-for="(item, index) in ApplyList" :key="index">
-                    <u-swipe-action-item class="ApplyList-item" :options="options" :disabled="item.status !='审批中'" @click="deleteMessage" :index="index" :name="index">
+                    <u-swipe-action-item class="ApplyList-item" :options="options" :disabled="item.status !='待审批'" @click="deleteMessage" :index="index" :name="item.lid">
                         <u-cell isLink>
                             <template #title>
                                 <view class="ApplyList-title">
@@ -124,10 +124,10 @@
                                 </view>
                                 <view class="ApplyList-label-time">
                                     <view class="ApplyList-label-time-item">
-                                        开始日期：{{ item.startDate }}
+                                        开始日期：{{ item.start }}
                                     </view>
                                     <view class="ApplyList-label-time-item">
-                                        结束日期：{{ item.endDate }}
+                                        结束日期：{{ item.end }}
                                     </view>
                                 </view>
                             </template>
@@ -135,7 +135,7 @@
                                 <view>
                                     <up-tag v-if="item.status === '已生效'" text="已生效" type="success"></up-tag>
                                     <up-tag v-else-if="item.status === '已撤销'" text="已撤销" type="error"></up-tag>
-                                    <up-tag v-else-if="item.status === '审批中'" text="审批中"></up-tag>
+                                    <up-tag v-else-if="item.status === '待审批'" text="待审批"></up-tag>
                                     <up-tag v-else text="拒绝" type="error"></up-tag>
                                 </view>
                             </template>
@@ -238,8 +238,8 @@ let ApplyList = ref<any>([
     leavingSchool: false,
     returnDormitory: false,
     notGoingToBed: false,
-    startDate: '2021-05-01',
-    endDate: '2021-05-01',
+    start: '2021-05-01',
+    end: '2021-05-01',
     status:'审批中'
 }
 ])
@@ -302,7 +302,6 @@ function typeClose() {
 }
 function noReturnToBedChange(item) {
     console.log(item)
-
 }
 
 function returnDormChange(item) {
@@ -414,24 +413,38 @@ function submit() {
     }).then(res=>{
         if(res.success){
             showtoast.onSuccess('提交成功')
-            
             setTimeout(() => {
                 back()
             }, 1000)
         }else{
-
+            showtoast.onError(res.message)
         }
     }).catch((err) => {
-
+        showtoast.onError(err)
     })
     }
 }
 function deleteMessage(index) {
-    console.log(index)
-    
-    // request({
-    //     url:`/life/leave/${lids}/revoke`
-    // })
+    console.log(index.name)
+    request({
+        url:`/life/leave/${index.name}/revoke`,
+        method:'post',
+        data:{
+            username:useinfo.value.username
+        }
+    }).then((res) => {
+        if (res.success) {
+            getApply()
+            current.value = ''
+            setTimeout(() => {
+                current.value ='我的申请'
+            }, 300)
+        }else{
+            showtoast.onError(res.message)
+        }
+    }).catch((err) => {
+        showtoast.onError(err)
+    })
 }
 function getApply() {
     request({
