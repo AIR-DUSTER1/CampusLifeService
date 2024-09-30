@@ -55,6 +55,9 @@
                                 {{ userInfo[item.value] ? userInfo[item.value].replace(/^(.{2})(.*?)(@.*)/, '$1****$3')
             : userInfo[item.value] }}
                             </view>
+                            <view v-else-if="item.title == '角色'" v-if="userInfo['roles']" class="text">
+                                {{ userInfo['roles'][0].label }}
+                            </view>
                             <view v-else class="text">{{ userInfo[item.value] }}</view>
                         </template>
                     </u-cell>
@@ -74,6 +77,8 @@ import showtoast from "@/utils/showtoast"
 import { settings } from '@/settings/settings'
 const store = useUserStore()
 const userInfo = computed(() => store.userinfo)
+console.log(userInfo.value)
+
 let uid = uni.getStorageSync('uid')
 let toast = ref()
 let file = ref<File>()
@@ -115,7 +120,7 @@ let list = ref([
     },
     {
         title: '角色',
-        value: 'authorities',
+        value: 'roles',
         url: '',
     }
 ])

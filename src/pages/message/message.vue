@@ -39,7 +39,9 @@ import request from "@/utils/request";
 import { onLoad } from "@dcloudio/uni-app"
 import { ref, reactive, watch, onMounted } from 'vue'
 import showtoast from "@/utils/showtoast"
+import usetabbar from "@/store/tabbar"
 const toast = ref()
+const tabbar = usetabbar()
 let nid = ref()
 let title = ref('通知消息')
 let content = ref({
@@ -65,12 +67,26 @@ request({
         console.log(res);
         title.value = res.data.title
         content.value = res.data
+        getBage()
     } else {
         showtoast.onError(res.message)
     }
 }).catch((err) => {
     showtoast.onError(err)
 })
+}
+function getBage(){
+    request({
+        url:'/system/notice/unread'
+    }).then((res:any) => {
+        if (res.success) {
+            tabbar.setBadge(res.data)
+        } else {
+            showtoast.onError(res.message)
+        }
+    }).catch((err) => {
+        showtoast.onError(err)
+    })
 }
 function back(){
     uni.navigateBack()

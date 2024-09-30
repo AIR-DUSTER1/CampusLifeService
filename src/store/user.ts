@@ -12,7 +12,7 @@ const useUserStore = defineStore('user', {
             idNumber: '',
             avatar: logo,
             uid: 0,
-            authorities: ['']
+            roles: ['']
         }
     },
     getters: {
@@ -28,6 +28,7 @@ const useUserStore = defineStore('user', {
             this.email = data.email
             this.idNumber = data.idNumber
             this.sex = data.sex
+            this.roles = data.roles
         },
         setUid(uid: number) {
             this.uid = uid

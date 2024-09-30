@@ -8,7 +8,7 @@
             </template>
             <template #center>
                 <view>
-                    <text>设置</text>
+                    <text>账户安全</text>
                 </view>
             </template>
         </Navbar>
