@@ -13,10 +13,10 @@
             </template>
         </Navbar>
         <!-- #ifdef APP -->
-        <u-gap height="20"></u-gap>
+        <u-gap height="30"></u-gap>
         <!-- #endif -->
-        <view>
-
+        <view style="height:80vh;width:100%">
+            <u-image :src="img" height="1000rpx" width="100%" ></u-image>
         </view>
     </view>
     <u-toast ref="toast"></u-toast>
@@ -28,7 +28,7 @@ import Navbar from "@/components/layout/navbar/navbar.vue"
 import showtoast from "@/utils/showtoast"
 import request from '@/utils/request'
 const toast = ref()
-let img = ref()
+let img = ref('https://qdbhu.edu.cn/UpBinhais/Images/20240808/84744fea-404c-4d32-80c7-9b2861f443c5.jpg')
 onMounted(() => {
     showtoast.onbind(toast.value)
     getSchoolCalendar()
