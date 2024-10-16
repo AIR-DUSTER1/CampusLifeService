@@ -1,7 +1,7 @@
 import interceptor from './interceptor'
 import { settings } from '@/settings/settings'
-export const baseURL = settings.apiAddress
-// export const baseURL = 'https://50efbb62.r10.cpolar.top'
+// export const baseURL = settings.apiAddress
+export const baseURL = 'https://37b51487.r10.cpolar.top'
 
 export interface ApiResult<T> {
     code: number; // API状态码
@@ -13,7 +13,7 @@ export interface ApiResult<T> {
 const request = <T>(options) => {
     // 判断是不是完整的地址，不是的话，拼接上baseUrl
     let urlPath = ''
-    if (options.url.indexOf('http') === -1) {
+    if (options.url.indexOf('http') === -1 && options.url.indexOf('https') === -1 ) {
         urlPath = baseURL + options.url
     } else {
         urlPath = options.url

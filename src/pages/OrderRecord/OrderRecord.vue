@@ -42,6 +42,7 @@
                 </u-list-item>
             </u-list>
         </view>
+
         <u-toast ref="toast"></u-toast>
     </view>
 </template>
@@ -55,6 +56,12 @@ let status = ref('loadmore')
 let payStatus = ref<any>([])
 let toEnd = ref(false)
 let currentPage = ref(1)
+const options = reactive([{
+    text: '取消',
+    style: {
+        backgroundColor: '#E53D30'
+    }
+}])
 const toast = ref()
 let list = ref<any>([
     // {

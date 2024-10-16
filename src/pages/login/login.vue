@@ -235,8 +235,9 @@ function loginqq() {
                     })
                     showtoast.onError(res.message)
                 } else if (res.message == '用户不存在') {
-                    showtoast.onError(res.message)
-                    tologin()
+                    uni.redirectTo({
+                        url:'/pages/login/bind?openid='+oauth.target.authResult.openid
+                    })
                 } else {
                     showtoast.onError(res.message)
                 }
@@ -285,18 +286,18 @@ function loginsina() {
                     })
                     showtoast.onError(res.message)
                 } else if (res.message == '用户不存在') {
-                    instance?.proxy?.$forceUpdate()
-                    showtoast.onError(res.message)
-                    uni.showToast({
-                        title: '用户不存在',
-                        icon: 'none',
-                        duration: 3000,
-                        complete() {
-                            uni.reLaunch({
-                                url: '/pages/login/login'
-                            })
-                        },
+                    // instance?.proxy?.$forceUpdate()
+                    uni.redirectTo({
+                        url:'/pages/login/bind?openid='+oauth.target.authResult.openid
                     })
+                    // showtoast.onError(res.message)
+                    // uni.showToast({
+                    //     title: '用户不存在',
+                    //     icon: 'none',
+                    //     duration: 3000,
+                    //     complete() {
+                    //     },
+                    // })
                 } else {
                     showtoast.onError(res.message)
                 }

@@ -117,10 +117,10 @@ function takephoto() {
         padding: 40rpx;
         border-radius: 8px;
         height: 460rpx;
-        background-image: url('@/static/images/card.png');
+        background-image: url('@/static/images/card3.png');
         background-repeat: no-repeat;
         background-size: cover;
-        color: #a343df;
+        color: #d4df43;
 
         .card-title {
             font-size: 40rpx;

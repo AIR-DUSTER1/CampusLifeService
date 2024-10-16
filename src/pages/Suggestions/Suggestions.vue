@@ -22,10 +22,7 @@
 </template>
 
 <script setup lang='ts'>
-import { onMounted, ref, toRaw, reactive, shallowRef, watch, onUnmounted, pushScopeId } from 'vue'
 import Navbar from "@/components/layout/navbar/navbar.vue"
-
-
 function back() {
     uni.navigateBack(
         {
