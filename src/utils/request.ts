@@ -1,7 +1,7 @@
 import interceptor from './interceptor'
 import { settings } from '@/settings/settings'
-// export const baseURL = settings.apiAddress
-export const baseURL = 'https://37b51487.r10.cpolar.top'
+export const baseURL = settings.apiAddress
+// export const baseURL = 'https://37b51487.r10.cpolar.top'
 
 export interface ApiResult<T> {
     code: number; // API状态码

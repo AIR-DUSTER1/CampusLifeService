@@ -13,7 +13,7 @@
         </view>
         <u-form labelPosition="left" :model="form" ref="activeForm" class="bindForm">
             <u-form-item prop="number">
-                <u-input :border="'bottom'" type="number" v-model.trim="form.number" placeholder="请输入学号" clearable />
+                <u-input :border="'bottom'" type="number" v-model.trim="form.number" placeholder="请输入学/工号" clearable />
             </u-form-item>
             <u-form-item prop="password">
                 <u-input v-show="!openPassword" :border="'bottom'" type="password" v-model.trim="form.password"
@@ -62,7 +62,14 @@ onMounted(() => {
     showtoast.onbind(toast.value)
 })
 function bind() {
-    request({
+    if (form.value.number === '' || form.value.number === null) {
+        showtoast.onError('请输入学/工号')
+    }else if (form.value.password === '' || form.value.password === null) {
+        showtoast.onError('请输入密码')
+    }else if (openid.value === ''|| openid.value === null|| openid.value === undefined) {
+        showtoast.onError('绑定失败，请重新绑定')
+    }else{
+        request({
         url: '/auth/app/loginAndBinding',
         method: 'post',
         data: {
@@ -84,6 +91,7 @@ function bind() {
     }).catch((err) => {
         showtoast.onError(err)
     })
+    }
 }
 function back() {
     uni.navigateBack()
