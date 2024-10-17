@@ -7,7 +7,7 @@
                     <!-- <u-icon name="arrow-left" size="20" color="#303133" @click="back"></u-icon> -->
                 </template>
                 <template #center>
-                    <view>激活</view>
+                    <view>绑定</view>
                 </template>
             </Navbar>
         </view>

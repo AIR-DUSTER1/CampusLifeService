@@ -248,12 +248,14 @@ const finish = (value: string) => {
         console.log(res.data);
         bordercolor.value = '#5ac725'
         store.setUid(res.data.uid)
-        uni.setStorageSync('token', res.data.token)
+        uni.setStorageSync('token', res.data.access_token)
         uni.setStorageSync('uid', res.data.uid)
         showtoast.onSuccess('登录成功')
-        uni.switchTab({
+        setTimeout(() => {
+          uni.switchTab({
           url: '/pages/tabbar/home/index'
         })
+        }, 300)
       } else if (res.message == '用户未激活') {
         uni.navigateTo({
           url: '/pages/login/active'
