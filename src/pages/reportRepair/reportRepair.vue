@@ -15,6 +15,9 @@
         <!-- #ifdef APP -->
         <u-gap height="20"></u-gap>
         <!-- #endif -->
+         <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="70"></u-gap>
+        <!-- #endif -->
         <view class="u-tabs-box">
             <u-tabs :list="list" @change="change" class="tabs"></u-tabs>
         </view>

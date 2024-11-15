@@ -12,8 +12,11 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP-->
         <u-gap height="20"></u-gap>
+        <!-- #endif -->
+        <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="70"></u-gap>
         <!-- #endif -->
         <view class="u-tabs-box">
             <u-tabs :list="list" @change="change" class="tabs"></u-tabs>
@@ -55,7 +58,7 @@
                         </u-radio>
                     </u-radio-group>
                 </u-form-item>
-                <u-form-item label="开始日期" prop="startvalue" labelWidth="80" required @click="startshow = !startshow">
+                <u-form-item label="开始日期" prop="startvalue" labelWidth="80" required @click="openstart()">
                     <u-input v-model="form.startDate" :disabled="startshow" disabledColor="#ffffff" type="text"
                         placeholder="请选开始日期" border="bottom">
                         <template #suffix>
@@ -63,7 +66,7 @@
                         </template>
                     </u-input>
                     <u-datetime-picker ref="datetimePickerRef" :show="startshow" v-model="startvalue" mode="datetime"
-                        :minDate="Date.now()" :formatter="formatter" @confirm="startTime" @change="startTime"
+                        :minDate="Date.now()" :formatter="formatter" @confirm="startTime" 
                         @cancel="startshow = !startshow"></u-datetime-picker>
                 </u-form-item>
                 <u-form-item label="结束日期" prop="endvalue" labelWidth="80" required @click="openend()">
@@ -277,7 +280,6 @@ const formatter = (type, value) => {
     return value;
 }
 function startTime(item) {
-
     console.log(startvalue.value);
     startshow.value = false
     let time = formatTimestamp(startvalue.value)
@@ -307,6 +309,9 @@ function noReturnToBedChange(item) {
 function returnDormChange(item) {
     console.log(item)
 
+}
+function openstart(){
+    startshow.value = !startshow.value
 }
 function openend() {
     enddisabled.value = true
@@ -497,6 +502,10 @@ body{
     .radio-group {
         flex-direction: row;
         justify-content: space-around;
+        :deep(.u-radio-group){
+            flex-direction: row !important;
+            justify-content: space-around;
+        }
     }
 }
 .ApplyList-item{

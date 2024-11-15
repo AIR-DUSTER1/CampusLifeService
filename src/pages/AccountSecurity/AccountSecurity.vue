@@ -12,8 +12,11 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP-->
         <u-gap height="30"></u-gap>
+        <!-- #endif -->
+        <!-- #ifdef MP-WEIXIN-->
+        <u-gap height="70"></u-gap>
         <!-- #endif -->
         <view class="AccountSecurity-list">
             <u-cell-group v-for="item in AccountSecurityList" :key="item.title">

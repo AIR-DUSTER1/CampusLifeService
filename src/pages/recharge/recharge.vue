@@ -12,8 +12,11 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP  -->
         <u-gap height="20"></u-gap>
+        <!-- #endif -->
+         <!-- #ifdef APP || MP-WEIXIN -->
+        <u-gap height="50"></u-gap>
         <!-- #endif -->
         <view class="recharge-number" v-if="charge">
             <u-input class="recharge-number-input" v-model="number" placeholder="请输入卡号" type="number"

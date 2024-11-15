@@ -8,11 +8,11 @@
             </template>
             <template #center>
                 <view>
-                    <text>更多新闻</text>
+                    <text>建议</text>
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP || MP-WEIXIN -->
         <u-gap height="20"></u-gap>
         <!-- #endif -->
         <view>

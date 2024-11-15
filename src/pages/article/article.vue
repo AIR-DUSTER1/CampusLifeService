@@ -15,6 +15,9 @@
         <!-- #ifdef APP -->
         <u-gap height="30"></u-gap>
         <!-- #endif -->
+         <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="60"></u-gap>
+        <!-- #endif -->
         <view class="news-info" v-if="news">
             <view class="news-info-title">
                 {{ news.title }}

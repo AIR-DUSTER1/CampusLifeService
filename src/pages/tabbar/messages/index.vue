@@ -11,8 +11,11 @@
             </template>
         </Navbar>
         
-        <!-- #ifdef APP || MP -->
+        <!-- #ifdef APP -->
         <u-gap height="20"></u-gap>
+        <!-- #endif -->
+        <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="60"></u-gap>
         <!-- #endif -->
         <view class="Message-list" v-if="!upEmpty">
             <u-list @scrolltolower='scrolltolower' class="list">

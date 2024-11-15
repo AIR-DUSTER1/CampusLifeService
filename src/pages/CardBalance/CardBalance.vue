@@ -12,8 +12,11 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP  -->
         <u-gap height="20"></u-gap>
+        <!-- #endif -->
+        <!-- #ifdef MP-WEIXIN  -->
+        <u-gap height="50"></u-gap>
         <!-- #endif -->
         <view class="form">
             <u-form labelPosition="left" :model="form">
@@ -21,7 +24,8 @@
                     <u-input v-model="form.cardNo" maxlength="6" type="number" border="bottom" clearable></u-input>
                 </u-form-item>
                 <u-form-item label="卡余额" borderBottom labelWidth="60">
-                    <u-input class="card-balance" v-model="form.cardBalance" disabled disabledColor="#ffffff" border="none"></u-input>
+                    <u-input class="card-balance" v-model="form.cardBalance" disabled disabledColor="#ffffff"
+                        border="none"></u-input>
                 </u-form-item>
             </u-form>
         </view>
@@ -48,7 +52,7 @@ let form = ref({
 })
 onMounted(() => {
     showtoast.onbind(toast.value)
-    if (form.value.cardNo !='') {
+    if (form.value.cardNo != '') {
         getBalance()
     }
 })
@@ -67,7 +71,7 @@ function getBalance() {
 }
 function torecharge() {
     uni.navigateTo({
-        url: '/pages/recharge/recharge?cardNo=' + form.value.cardNo 
+        url: '/pages/recharge/recharge?cardNo=' + form.value.cardNo
     })
 }
 function back() {
@@ -80,7 +84,8 @@ function back() {
 <style lang='scss' scoped>
 .form {
     padding: 40rpx;
-    .card-balance{
+
+    .card-balance {
         margin-left: 30rpx;
     }
 }

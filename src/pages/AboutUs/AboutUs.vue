@@ -12,12 +12,12 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP || MP-WEIXIN -->
         <u-gap height="30"></u-gap>
         <!-- #endif -->
         <view class="about-us">
             <view>
-                <u-image :show-loading="true" src="/src/static/logo.png" width="80px" height="80px"
+                <u-image :show-loading="true" :src="logo" width="80px" height="80px"
                     class="logo"></u-image>
                 <view class="title">飞鸟校园生活服务平台</view>
             </view>
@@ -27,6 +27,7 @@
 
 <script setup lang='ts'>
 import { onMounted, ref, toRaw, reactive } from 'vue'
+import logo from '@/static/logo.png'
 import Navbar from "@/components/layout/navbar/navbar.vue"
 function back() {
     uni.navigateBack(

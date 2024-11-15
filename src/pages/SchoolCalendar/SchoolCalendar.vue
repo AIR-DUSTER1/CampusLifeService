@@ -15,6 +15,9 @@
         <!-- #ifdef APP -->
         <u-gap height="30"></u-gap>
         <!-- #endif -->
+         <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="65"></u-gap>
+        <!-- #endif -->
         <view style="height:80vh;width:100%">
             <u-image :src="img" height="1000rpx" width="100%" ></u-image>
         </view>

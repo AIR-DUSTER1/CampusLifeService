@@ -12,8 +12,11 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP-->
         <u-gap height="20"></u-gap>
+        <!-- #endif -->
+         <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="70"></u-gap>
         <!-- #endif -->
         <view class="changeForm">
             <u-form ref="changeForm" :model="form">

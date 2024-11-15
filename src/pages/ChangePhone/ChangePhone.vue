@@ -15,8 +15,11 @@
         <!-- #ifdef APP -->
         <u-gap height="30"></u-gap>
         <!-- #endif -->
+        <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="70"></u-gap>
+        <!-- #endif -->
         <view class="change-phone-form" v-if="current == 'phone'">
-            <u-form ref="verificationForm" class="verificationForm" :model="form" v-if="!changePhoneNumber">
+            <u-form ref="verificationFormPhone" class="verificationForm" :model="form" v-if="!changePhoneNumber">
                 <u-form-item label="手机号" prop="phone" labelWidth="60">
                     <u-input disabled v-model="form.phone" :maxlength="11" color="#AFAFAF" disabledColor="#ffffff"
                         border="bottom" clearable></u-input>
@@ -55,7 +58,7 @@
             </u-form>
         </view>
         <view class="change-email-form" v-else-if="current == 'email'">
-            <u-form ref="verificationForm" class="verificationForm" :model="form" v-if="!changePhoneNumber">
+            <u-form ref="verificationFormEmail" class="verificationForm" :model="form" v-if="!changePhoneNumber">
                 <u-form-item label="邮箱" prop="email" labelWidth="60">
                     <u-input disabled v-model="form.email" :maxlength="11" color="#AFAFAF" disabledColor="#ffffff"
                         border="bottom" clearable></u-input>
@@ -107,7 +110,8 @@ const store = useUserStore()
 const userInfo = computed(() => store.userinfo)
 const toast = ref()
 const changeForm = ref()
-const verificationForm = ref()
+const verificationFormPhone = ref()
+const verificationFormEmail = ref()
 let changePhoneNumber = ref(false)
 let sendcode = ref(false)
 let time = ref(60)
@@ -151,7 +155,8 @@ onLoad((query: any) => {
 })
 onMounted(() => {
     showtoast.onbind(toast.value)
-    verificationForm.value.setRules(rule)
+    verificationFormPhone.value.setRules(rule)
+    verificationFormEmail.value.setRules(rule)
 })
 function submit() {
     changeForm.value.validate().then((valid) => {
@@ -182,7 +187,7 @@ function submit() {
     })
 }
 function checkphone() {
-    verificationForm.value.validate().then((valid) => {
+    verificationFormPhone.value.validate().then((valid) => {
         if (valid) {
             request({
                 url: '/captcha/check',
@@ -207,7 +212,7 @@ function checkphone() {
     })
 }
 function checkemail() {
-    verificationForm.value.validate().then((valid) => {
+    verificationFormEmail.value.validate().then((valid) => {
         if (valid) {
             request({
                 url: '/captcha/check',

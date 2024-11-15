@@ -1,4 +1,7 @@
 <template>
+  <!-- #ifdef MP-WEIXIN -->
+  <u-gap height="50"></u-gap>
+  <!-- #endif -->
   <layout class="my">
     <view class="user-info" @click="click()" v-if="userinfo.username != ''">
       <view class="user-info-avatar">

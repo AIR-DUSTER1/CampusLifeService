@@ -15,6 +15,9 @@
         <!-- #ifdef APP -->
         <u-gap height="30"></u-gap>
         <!-- #endif -->
+        <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="70"></u-gap>
+        <!-- #endif -->
         <view class="setting-list">
             <u-cell-group>
                 <u-cell isLink v-for="item in settingList" :key="item.url" @click="toPage(item.url)">

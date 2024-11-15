@@ -30,7 +30,9 @@ onLoad(() => {
     token.value = uni.getStorageSync('token')
     if (token.value != '' && token.value != null && token.value != undefined) {
         tokenExist.value = true
+        // #ifndef APP
         uni.closeAuthView()
+        // #endif
         uni.switchTab({
             url: '/pages/tabbar/home/index'
         })

@@ -15,6 +15,9 @@
         <!-- #ifdef APP -->
         <u-gap height="20"></u-gap>
         <!-- #endif -->
+         <!-- #ifdef MP-WEIXIN -->
+        <u-gap height="50"></u-gap>
+        <!-- #endif -->
         <view class="payment-code">
             <u-image :src="payimg" width="200px" height="200px" class="img" @click="reload"></u-image>
             <view>{{ setTime }}秒后自动刷新</view>

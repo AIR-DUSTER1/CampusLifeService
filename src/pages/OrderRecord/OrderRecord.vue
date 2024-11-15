@@ -12,7 +12,7 @@
                 </view>
             </template>
         </Navbar>
-        <!-- #ifdef APP -->
+        <!-- #ifdef APP || MP-WEIXIN -->
         <u-gap height="20"></u-gap>
         <!-- #endif -->
         <view class="order-list">
