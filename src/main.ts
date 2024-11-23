@@ -1,6 +1,7 @@
 import { createSSRApp } from "vue"
 import App from "./App.vue"
 import uviewPlus from "uview-plus"
+import "uview-plus/index.scss"
 import { createPinia } from "pinia"
 const Pinia = createPinia();
 

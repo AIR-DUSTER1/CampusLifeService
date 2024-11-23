@@ -108,7 +108,7 @@ function toMessage(item) {
 <style lang='scss' scoped>
 .navbar {
     background-color: $page-bg;
-    height: calc(100vh - 103rpx);
+    // height: calc(100vh - 103rpx);
 
     .list {
         height: calc(100vh - 190rpx) !important;
