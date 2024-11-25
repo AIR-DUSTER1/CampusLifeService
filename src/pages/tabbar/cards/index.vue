@@ -120,14 +120,17 @@ function takephoto() {
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        /* #ifdef APP-PLUS */
+        background-image: url('@/static/images/card3.png');
+        background-repeat: no-repeat;
+        background-size: cover;
+        /* #endif */
         // background-color: $moduleBackgroundColor;
         margin: 20rpx 10rpx;
         padding: 40rpx;
         border-radius: 8px;
         height: 460rpx;
-        // background-image: url('@/static/images/card3.png');
-        // background-repeat: no-repeat;
-        // background-size: cover;
+
         color: #d4df43;
 
         .card-title {

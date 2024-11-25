@@ -1,17 +1,17 @@
 import { ref } from 'vue'
-const websoket = ref();
-
+import { settings } from '@/settings/settings'
+const websoket = ref()
 const webSoketInit = (address: string) => {
     //路径
-    const wsUrl = address
+    const wsUrl = settings.wsAddress+ address
 
     websoket.value = uni.connectSocket({
         url: wsUrl,
         success: () => {
-            console.log('websoket连接成功');
+            console.log('websoket连接成功',websoket.value);
         },
         fail: () => {
-            console.log('websoket连接失败');
+            console.log('websoket连接失败',wsUrl,websoket.value);
             uni.showToast({
                 title: 'websoket连接失败',
                 icon: 'error',
@@ -41,7 +41,10 @@ const closeSocket = () => {
         },
     });
 };
-
+// const onMessage = (callback: any) => {
+//     websoket.value.onMessage(callback);
+//     return callback;
+// };
 const sendMessage = (data: string) => {
     websoket.value.send({
         data,
@@ -51,5 +54,5 @@ const sendMessage = (data: string) => {
     });
 };
 export {
-    websoket, webSoketInit, closeSocket, sendMessage,
+    websoket, webSoketInit, closeSocket, sendMessage
 };

@@ -15,7 +15,7 @@
         <!-- #ifdef APP  -->
         <u-gap height="20"></u-gap>
         <!-- #endif -->
-         <!-- #ifdef APP || MP-WEIXIN -->
+         <!-- #ifdef MP-WEIXIN -->
         <u-gap height="50"></u-gap>
         <!-- #endif -->
         <view class="recharge-number" v-if="charge">
@@ -67,7 +67,8 @@ import { onMounted, ref, toRaw, reactive, shallowRef, watch, onUnmounted } from 
 import Navbar from "@/components/layout/navbar/navbar.vue"
 import request from '@/utils/request'
 import showtoast from '@/utils/showtoast'
-import { onLoad } from '@dcloudio/uni-app';
+import { onLoad } from '@dcloudio/uni-app'
+import { websoket,webSoketInit,closeSocket } from '@/apis/websocket'
 let number = ref()
 let rechargeAmount = ref()
 let charge = ref(true)
@@ -90,10 +91,18 @@ const tagMoneny = reactive([
 ])
 onLoad((query:any) => {
     number.value = query.cardNo ? query.cardNo : ''
-    
 })
 onMounted(() => {
     showtoast.onbind(toast.value)
+    webSoketInit('/card/pay/'+Math.floor(Math.random()*10000))
+    websoket.value.onMessage(res => {
+        console.log(res,websoket.value.readyState)
+        if (res.data == 'success') {
+            query()
+            // closeSocket()
+        }
+        // payAddress.value = res.data
+})
 })
 function query() {
     request({
@@ -113,56 +122,67 @@ function recharge() {
     if (rechargeAmount.value == '' || rechargeAmount.value == null || rechargeAmount.value == undefined) {
         showtoast.onError('请输入充值金额')
     } else {
-        request({
-            url: '/card/alipay/apppay',
-            data: {
-                totalAmount: rechargeAmount.value,
-                cardNo: number.value
-            }
-        }).then((res:any) => {
-            console.log(res)
-            // payAddress.value 
-            let EnvUtils = plus.android.importClass("com.alipay.sdk.app.EnvUtils");    
-            EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
-            let orderInfo = res.body;  //从服务器获取的订单
-            //获取支付宝支付对象
-            let alipaySev:any = null;  // 支付宝支付对象
-            plus.payment.getChannels(function (channels) {
-                for (var i in channels) {
-                    var channel = channels[i];
-                    if (channel.id === 'alipay') {
-                        alipaySev = channel;
-                    }
-                }
-                //发起支付
-                plus.payment.request(alipaySev, orderInfo, function (result) {
-                    var rawdata = JSON.parse(result.rawdata as string);
-                    console.log(rawdata);
-                    showtoast.onSuccess('支付成功')
-                    console.log("支付成功");
-                    query()
-                }, function (e) {
-                    showtoast.onError(e.message)
-                    console.log("支付失败：" + JSON.stringify(e));
-                });
-            }, function (e) {
-                console.log("获取支付渠道失败：" + JSON.stringify(e));
-            });
-        }).catch((err) => {
-            // showtoast.onError(err)
-        })
+		// #ifdef APP
+		request({
+		    url: '/card/alipay/apppay',
+		    data: {
+		        totalAmount: rechargeAmount.value,
+		        cardNo: number.value
+		    }
+		}).then((res:any) => {
+		    console.log(res)
+		    // payAddress.value 
+		    let EnvUtils = plus.android.importClass("com.alipay.sdk.app.EnvUtils");    
+		    EnvUtils.setEnv(EnvUtils.EnvEnum.SANDBOX);
+		    let orderInfo = res.body;  //从服务器获取的订单
+		    //获取支付宝支付对象
+		    let alipaySev:any = null;  // 支付宝支付对象
+		    plus.payment.getChannels(function (channels) {
+		        for (var i in channels) {
+		            var channel = channels[i];
+		            if (channel.id === 'alipay') {
+		                alipaySev = channel;
+		            }
+		        }
+		        //发起支付
+		        plus.payment.request(alipaySev, orderInfo, function (result) {
+		            var rawdata = JSON.parse(result.rawdata as string);
+		            console.log(rawdata);
+		            showtoast.onSuccess('支付成功')
+		            console.log("支付成功");
+		            query()
+		        }, function (e) {
+		            showtoast.onError(e.message)
+		            console.log("支付失败：" + JSON.stringify(e));
+		        });
+		    }, function (e) {
+		        console.log("获取支付渠道失败：" + JSON.stringify(e));
+		    });
+		}).catch((err) => {
+		    // showtoast.onError(err)
+		})
+		// #endif
+        // #ifdef MP-WEIXIN
+		uni.navigateTo({
+			url: '/pages/ChargeView/ChargeView?rechargeAmount=' + rechargeAmount.value + '&cardNo=' + number.value
+		})
+        // #endif
     }
 }
 function amountOfMoney(item) {
     rechargeAmount.value = item
     console.log(rechargeAmount.value)
-
 }
 function back() {
     uni.navigateBack({
         delta: 1
     })
 }
+onUnmounted(() => {
+    if (websoket.value.readyState !=3) {
+        closeSocket()
+    }
+})
 </script>
 
 <style lang='scss' scoped>

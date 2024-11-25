@@ -206,6 +206,13 @@
                 "navigationBarTitleText": "校历"
             }
         },
+		{
+			"path": "pages/ChargeView/ChargeView",
+			"style": {
+			    "navigationStyle": "custom",
+			    "navigationBarTitleText": "微信充值页"
+				}
+		},
 		// #ifdef APP 
 		{
 		    "path": "pages/popup/popup",
@@ -218,8 +225,8 @@
 		            "popGesture": "none"
 		        }
 		    }
-		// #endif 
 },
+// #endif 
 {
     "path": "pages/message/message",
     "style": {
